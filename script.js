@@ -8,7 +8,7 @@ function generate_recipe_clicked() {
 
 
 
-    const variableRegex = /\b(?:for|while)\s+(\w+)|\b(\w+)\s*=/g;
+    const variableRegex = /\b(?:for|while)\s+(\w+)|\b(\w+)\s*=^=/g;
     let variableBank = new Set();
     const parameterRegex = /def\s+(\w+)\s*\(([^)]*)\)/g;
     let match;
@@ -118,6 +118,9 @@ function generate_recipe_clicked() {
     text = text.replaceAll("{}", "an empty map");
     text = text.replaceAll("[]", "an empty sequence");
 
+    text = text.replaceAll(/[Ii]nput(s?):/g, "<b>Input$1:</b>");
+    text = text.replaceAll(/[Rr]eturns:/g, "<b>Output:</b>")
+
     // explicit list re-format
     text = text.replaceAll(/(^\w|\s)\[(.+)\]/g,"$1$2");
 
@@ -131,6 +134,9 @@ function generate_recipe_clicked() {
     let className = classNames? classNames[1]:null;
     if(className){
       text = text.replace(/__init__/,"Initialize"+className);
+      // TODO in the __init__ method replace self. with 
+      // create varName as a private member field inside the object className
+
       className = className[0].toLowerCase()+className.slice(1);
       text = text.replaceAll(/<i>self<\/i>\._?(\w+)/g, "<i>self</i>.<i>$1</i>");
       text = text.replaceAll("<i>self</i>","<i>"+className+"</i>");
