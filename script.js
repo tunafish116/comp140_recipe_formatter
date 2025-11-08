@@ -3,6 +3,7 @@
 
 function generate_recipe_clicked() {
     let text = document.getElementById("text-input").value;
+    text = "padding_DoTpBBEFqY\n"+text;
     let textOutput = document.getElementById("text-output");
 
 
@@ -33,6 +34,7 @@ function generate_recipe_clicked() {
     text = text.replaceAll("for ", "for each ");
     text = text.replaceAll("elif ", "otherwise if ");
     text = text.replaceAll(/(for each|while)(.*):\s*\n/g, "<b>$1</b>$2 <b>do</b>\n");
+    text = text.replaceAll(/(if.*)in/g, "$1is in");
     text = text.replaceAll(/(if|otherwise if|else)(.*):\s*\n/g, "<b>$1</b>$2 <b>then</b>\n");
     text = text.replaceAll(/([\w\[\]\(\)_]+)\s?([\+-/\*])=\s?("?[\w\[\]\(\)]+"?)/g, "$1 = $1 $2 $3");
     text = text.replaceAll(/\s*!=\s*/g," is not equal to ");
@@ -87,14 +89,23 @@ function generate_recipe_clicked() {
       }
     );
     text = text.replaceAll(/(\w+)\.pop\(\s*(\w+)\s*\)/g, "remove the element at index $2 from $1");
+    text = text.replaceAll(/(\w+)\.insert\(\s*(\w+)\s*,\s*(\w)\s*\)/g, "insert $3 into $1 at index $2");
+    text = text.replaceAll(/(\w+)\.keys\(\)/g, "the keys of $1");
+    text = text.replaceAll(/(\w+)\.values\(\)/g, "the values of $1");
+    text = text.replaceAll(/(\w+)\.(\w+\([^\)]*\))/g, "the value returned by calling $2 on the object $1");
 
     text = text.replaceAll(/(\w+)\[([^\]]+)\]/g, "$1<sub>$2</sub>");
 
     variableBank = [...variableBank];
     variableBank = variableBank.join('|');
     const italicize = new RegExp(`([^\\w])(${variableBank})([^\\w])`,'g');
-    
-    text = text.replace(italicize, '$1<i>$2</i>$3');
+
+    //ensure that there is a 2 character gap between variables so regex can capture all variables
+    text = text.replaceAll(",",", "); 
+    //italicize variables
+    text = text.replaceAll(italicize, '$1<i>$2</i>$3');
+    //restore commas
+    text = text.replaceAll(", ",",");
     // experimental code below for later versions.
     //text = text.replaceAll(/def\s+(\w+).+/g,"<hr style=\"border-color:black\"><b>Name:</b> $1<hr style=\"border-color:black\">");
     //text = text.replaceAll("*","\u00d7");
@@ -127,7 +138,8 @@ function generate_recipe_clicked() {
 
 
 
-
+    // remove padding
+    text = text.slice(19);
 
 
 
@@ -159,6 +171,7 @@ function generate_recipe_clicked() {
  * find and store class name: class ******
  * replace __init___ with Initialize*className*
  * within a class, if variables start with _, delete it. Actually, just delete all _var
+ * 
  * 
  * 
  * 
