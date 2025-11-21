@@ -46,6 +46,9 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/len\((\w+)\)/g, "the length of $1");
     text = text.replaceAll(/\s*\*\*\s*/g," to the power of ");
     text = text.replaceAll(/sorted\(\s*(\w+)\s*\)/g,"$1 sorted in ascending alhpanumeric order");
+    text = text.replaceAll(/int\(\s*(\w+)\s*\)/g, "$1 parsed as an integer");
+    text = text.replaceAll(/float\(\s*(\w+)\s*\)/g, "$1 parsed as a float");
+
 
 
     const subsequenceRegex = /(\w+)\[\s*([^:\]]*)\s*:\s*([^:\]]*)\s*\]/g;
@@ -93,9 +96,11 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/(\w+)\.keys\(\)/g, "the keys of $1");
     text = text.replaceAll(/(\w+)\.values\(\)/g, "the values of $1");
     text = text.replaceAll(/(\w+)\.(\w+\([^\)]*\))/g, "the value returned by calling $2 on the object $1");
+    text = text.replaceAll(/(\w+)\[\s?-1\s?\]/g, "the last element of $1");
 
     text = text.replaceAll(/(\w+)\[([^\]]+)\]/g, "$1<sub>$2</sub>");
 
+    // set to array
     variableBank = [...variableBank];
     variableBank = variableBank.join('|');
     const italicize = new RegExp(`([^\\w])(${variableBank})([^\\w])`,'g');
@@ -119,7 +124,7 @@ function generate_recipe_clicked() {
     text = text.replaceAll("[]", "an empty sequence");
 
     text = text.replaceAll(/[Ii]nput(s?):/g, "<b>Input$1:</b>");
-    text = text.replaceAll(/[Rr]eturns:/g, "<b>Output:</b>")
+    text = text.replaceAll(/[Rr]eturns:/g, "<b>Output:</b>");
 
     // explicit list re-format
     text = text.replaceAll(/(^\w|\s)\[(.+)\]/g,"$1$2");
