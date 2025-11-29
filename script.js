@@ -3,12 +3,12 @@
 
 function generate_recipe_clicked() {
     let text = document.getElementById("text-input").value;
-    text = "padding_DoTpBBEFqY\n"+text;
+    text = "padding_DoTpBBEFqY\n"+text+"\npadding";
     let textOutput = document.getElementById("text-output");
 
 
 
-    const variableRegex = /\b(?:for|while)\s+(\w+)|\b(\w+)\s*=^=/g;
+    const variableRegex = /\b(?:for|while)\s+(\w+)|\b(\w+)\s*=[^=]/g;
     let variableBank = new Set();
     const parameterRegex = /def\s+(\w+)\s*\(([^)]*)\)/g;
     let match;
@@ -17,6 +17,7 @@ function generate_recipe_clicked() {
       // one of the capture groups will be defined
       variableBank.add(match[1] || match[2]);
     }
+
 
     while ((match = parameterRegex.exec(text)) !== null) {
       const params = match[2]
@@ -27,6 +28,13 @@ function generate_recipe_clicked() {
         variableBank.add(param);
       });
     }
+
+    const mapRegex = /\b(\w+)\s*=\s*\{\}/g;
+    let mapBank = new Set();
+    while ((match = mapRegex.exec(text)) !== null) {
+      mapBank.add(match[1]);
+    }
+
     console.log(variableBank);
 
 
@@ -38,8 +46,8 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/(if|otherwise if|else)(.*):\s*\n/g, "<b>$1</b>$2 <b>then</b>\n");
     text = text.replaceAll(/([\w\[\]\(\)_]+)\s?([\+-/\*])=\s?("?[\w\[\]\(\)]+"?)/g, "$1 = $1 $2 $3");
     text = text.replaceAll(/\s*!=\s*/g," is not equal to ");
-    text = text.replaceAll("=","\u2190");
-    text = text.replaceAll("\u2190\u2190","=");
+    text = text.replaceAll("=","←");
+    text = text.replaceAll("←←","=");
     text = text.replaceAll(/([<>])\u2190/g,"$1=");
     const appendRegex = /(\w+)\.append\(([^\)]+)\)/g;
     text = text.replaceAll(appendRegex, "append $2 to the end of $1 ");
@@ -98,6 +106,13 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/(\w+)\.(\w+\([^\)]*\))/g, "the value returned by calling $2 on the object $1");
     text = text.replaceAll(/(\w+)\[\s?-1\s?\]/g, "the last element of $1");
 
+    // HERE
+    // if array is actually map, make assignments correspondences instead
+    mapBank = [...mapBank];
+    mapBank = mapBank.join('|');
+    const mapCorrespondence = new RegExp(`(${mapBank})\\[([^\\]]+)\\]\\s*←\\s*(.+)`,'g');
+    text = text.replaceAll(mapCorrespondence, 'add a new correspondence $2 ↦ $3 to the map $1');
+    //array index to subscript
     text = text.replaceAll(/(\w+)\[([^\]]+)\]/g, "$1<sub>$2</sub>");
 
     // set to array
@@ -150,7 +165,7 @@ function generate_recipe_clicked() {
 
 
     // remove padding
-    text = text.slice(19);
+    text = text.slice(19,-8);
 
 
 
