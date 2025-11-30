@@ -3,8 +3,9 @@ div{
     padding: 5px;
 }
 
-pre{
-    padding: 0px;
+.border{
+    padding: 5px;
+    border: 2px solid black;
 }
 
 button{
