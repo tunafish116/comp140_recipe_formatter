@@ -1,6 +1,7 @@
 
 
 
+
 function generate_recipe_clicked() {
     let text = document.getElementById("text-input").value;
     text = "padding_DoTpBBEFqY\n"+text+"\npadding";
@@ -8,7 +9,7 @@ function generate_recipe_clicked() {
 
 
 
-    const variableRegex = /\b(?:for|while)\s+(\w+)|\b(\w+)\s*=[^=]/g;
+    const variableRegex = /\b(?:for|while)\s+(\w+).+:|\b(\w+)\s*=[^=]/g;
     let variableBank = new Set();
     const parameterRegex = /def\s+(\w+)\s*\(([^)]*)\)/g;
     let match;
@@ -42,20 +43,23 @@ function generate_recipe_clicked() {
     text = text.replaceAll("for ", "for each ");
     text = text.replaceAll("elif ", "otherwise if ");
     text = text.replaceAll(/(for each|while)(.*):\s*\n/g, "<b>$1</b>$2 <b>do</b>\n");
-    text = text.replaceAll(/(if.*)in/g, "$1is in");
+    text = text.replaceAll(/(if.*)\sin\s/g, "$1 is in ");
     text = text.replaceAll(/(if|otherwise if|else)(.*):\s*\n/g, "<b>$1</b>$2 <b>then</b>\n");
     text = text.replaceAll(/([\w\[\]\(\)_]+)\s?([\+-/\*])=\s?("?[\w\[\]\(\)]+"?)/g, "$1 = $1 $2 $3");
     text = text.replaceAll(/\s*!=\s*/g," is not equal to ");
     text = text.replaceAll("=","←");
     text = text.replaceAll("←←","=");
     text = text.replaceAll(/([<>])\u2190/g,"$1=");
-    const appendRegex = /(\w+)\.append\(([^\)]+)\)/g;
-    text = text.replaceAll(appendRegex, "append $2 to the end of $1 ");
+    const appendRegex = /(\w+)\.append\((.+)\)\s*\n/g;
+    text = text.replaceAll(appendRegex, "append $2 to the end of $1\n");
     text = text.replaceAll(/len\((\w+)\)/g, "the length of $1");
     text = text.replaceAll(/\s*\*\*\s*/g," to the power of ");
     text = text.replaceAll(/sorted\(\s*(\w+)\s*\)/g,"$1 sorted in ascending alhpanumeric order");
     text = text.replaceAll(/int\(\s*(\w+)\s*\)/g, "$1 parsed as an integer");
     text = text.replaceAll(/float\(\s*(\w+)\s*\)/g, "$1 parsed as a real number");
+    text = text.replaceAll(/float\(\s*["'](-?)inf['"]\)/g, "$1∞");
+    text = text.replaceAll("None", "<i>null</i>");
+    text = text.replaceAll(/math.sqrt\((.+)\)/g,"the square root of $1");
 
 
 
@@ -106,7 +110,6 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/(\w+)\.(\w+\([^\)]*\))/g, "the value returned by calling $2 on the object $1");
     text = text.replaceAll(/(\w+)\[\s?-1\s?\]/g, "the last element of $1");
 
-    // HERE
     // if array is actually map, make assignments correspondences instead
     mapBank = [...mapBank];
     mapBank = mapBank.join('|');

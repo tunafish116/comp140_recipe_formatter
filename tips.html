@@ -35,22 +35,9 @@ this also applies to nested dictionaries as well.
 
 
 
-2. Avoid nested parentheses. It breaks my regex, and I'm not making a full blown
- interpreter for this. Also, it makes your code more readable anyways, which is
- good when you want to translate it into a recipe.
-Example:
-    instead of:
-        list.append((tempF-32)*5/9)
-    use:
-        tempC = (tempF-32)*5/9
-        list.append(tempC)
-
-
-
-
-3. Please still check each line for mistakes. If you put that much trust in a
+2. Please still check each line for mistakes. If you put that much trust in a
  random person's code to do your assignment, I'm very flattered, thank you,
- but please don't. Some of the more exotic aspects of python I have not 
+ but please don't. Some of the more exotic aspects of python have not 
  implemented into the recipe formatter yet.
 
  Examples of recognized python features:
@@ -72,7 +59,7 @@ Example:
 
 
 
-4. Why can't it write my inputs and outputs WAAAAAHH
+3. Why can't it write my inputs and outputs WAAAAAHH
 
 The point of this tool is to show how stupid certain aspects of recipes are.
 The fact a couple lines of replaceAll using regex can get you to 80% of a full
@@ -86,10 +73,10 @@ Sorry you'll still have to write your inputs and outputs yourself :3
 
 
 
-
-5. Italicize externally defined variables by adding an "=" after the variable
-Example:
-    To italicize "object", add "object=" somewhere in your code text
+4. Other stuff that may be useful
+    - To italicize "var_name", add "var_name=" somewhere in your code text
+    - To recognize "var_name" as a map, add "var_name={}" somewhere in your code text
+    - To escape the stress of Comp140, click on the "about" button
 
 
 
