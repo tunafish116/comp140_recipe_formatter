@@ -30,7 +30,7 @@ function generate_recipe_clicked() {
       });
     }
 
-    const mapRegex = /\b(\w+)\s*=\s*\{\}/g;
+    const mapRegex = /\b(\w+)\s*=\s*\{.*\}/g;
     let mapBank = new Set();
     while ((match = mapRegex.exec(text)) !== null) {
       mapBank.add(match[1]);
@@ -138,8 +138,9 @@ function generate_recipe_clicked() {
     text = text.replaceAll("return ","<b>return</b> ");
     
 
-    text = text.replaceAll("{}", "an empty map");
-    text = text.replaceAll("[]", "an empty sequence");
+    text = text.replaceAll(/\{\s?\}/g, "an empty map");
+    text = text.replaceAll(/\{\s?(\w+)\s?:\s?(\w+)\s?\}/g, "a map with the correspondence $1 ↦ $2");
+    text = text.replaceAll(/\[\s?\]/g, "an empty sequence");
 
     text = text.replaceAll(/[Ii]nput(s?):/g, "<b>Input$1:</b>");
     text = text.replaceAll(/[Rr]eturns:/g, "<b>Output:</b>");
