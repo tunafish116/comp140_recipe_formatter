@@ -75,7 +75,7 @@ function generate_recipe_clicked() {
 
     text = text.replaceAll(/random.random\(\)/g, "a random real number >= 0 and < 1, chosen with a uniform distribution");
     text = text.replaceAll(/random.randint\(\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/g, "a random integer >= $1 and <= $2 chosen with uniform distribution");
-    text = text.replaceAll(/range\(\s*(\w+)\s*\)/g, (match, a) => {
+    text = text.replaceAll(/range\(\s*(.+)\s*\)/g, (match, a) => {
         result = "the sequence 0,1,2,...,"
         if(isNaN(a)){
           result += `${a+"-1"}`;
