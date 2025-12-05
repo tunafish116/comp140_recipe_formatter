@@ -105,6 +105,7 @@ function generate_recipe_clicked() {
         return result;
       }
     );
+    text = text.replaceAll(/(\s*)(\w+\s*←\s*)(\w+)\.pop\(\s*(\w+)\s*\)/g, "$1$2$3<sub>$4</sub>$1remove the element at index $4 from $3");
     text = text.replaceAll(/(\w+)\.pop\(\s*(\w+)\s*\)/g, "remove the element at index $2 from $1");
     text = text.replaceAll(/(\w+)\.insert\(\s*(\w+)\s*,\s*(\w)\s*\)/g, "insert $3 into $1 at index $2");
     text = text.replaceAll(/(\w+)\.keys\(\)/g, "the keys of $1");
