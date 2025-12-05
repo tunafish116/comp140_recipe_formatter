@@ -35,8 +35,10 @@ function generate_recipe_clicked() {
     while ((match = mapRegex.exec(text)) !== null) {
       mapBank.add(match[1]);
     }
-
+    console.log("variables:");
     console.log(variableBank);
+    console.log("maps:");
+    console.log(mapBank);
 
 
     //  /([\w\[\]\(\)]+)\s?([\+-\\\*])=\s?([\w\[\]\(\)]+)/g 
@@ -114,7 +116,9 @@ function generate_recipe_clicked() {
     mapBank = [...mapBank];
     mapBank = mapBank.join('|');
     const mapCorrespondence = new RegExp(`(${mapBank})\\[([^\\]]+)\\]\\s*←\\s*(.+)`,'g');
-    text = text.replaceAll(mapCorrespondence, 'add a new correspondence $2 ↦ $3 to the map $1');
+    if(mapBank != ""){
+      text = text.replaceAll(mapCorrespondence, 'add a new correspondence $2 ↦ $3 to the map $1');
+    }
     //array index to subscript
     text = text.replaceAll(/(\w+)\[([^\]]+)\]/g, "$1<sub>$2</sub>");
 
@@ -123,12 +127,17 @@ function generate_recipe_clicked() {
     variableBank = variableBank.join('|');
     const italicize = new RegExp(`([^\\w])(${variableBank})([^\\w])`,'g');
 
-    //ensure that there is a 2 character gap between variables so regex can capture all variables
-    text = text.replaceAll(",",", "); 
-    //italicize variables
-    text = text.replaceAll(italicize, '$1<i>$2</i>$3');
-    //restore commas
-    text = text.replaceAll(", ",",");
+
+    
+    if(variableBank != ""){
+      //ensure that there is a 2 character gap between variables so regex can capture all variables
+      text = text.replaceAll(",",", "); 
+      //italicize variables
+      text = text.replaceAll(italicize, '$1<i>$2</i>$3');
+      //restore commas
+      text = text.replaceAll(", ",",");
+    }
+
     // experimental code below for later versions.
     //text = text.replaceAll(/def\s+(\w+).+/g,"<hr style=\"border-color:black\"><b>Name:</b> $1<hr style=\"border-color:black\">");
     //text = text.replaceAll("*","\u00d7");
