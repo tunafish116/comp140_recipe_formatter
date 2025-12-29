@@ -239,7 +239,6 @@ function generate_recipe_clicked() {
  * 
  * 
  * 
- * 
  */ 
 
     console.log(text);
