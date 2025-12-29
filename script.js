@@ -10,6 +10,11 @@ if(storedText){
   textInput.value = storedText;
 }
 
+// Register user on page load
+fetch("/api/users", {
+  method: "POST"
+});
+
 // Save text to localStorage before unloading the page
 window.addEventListener("beforeunload", () => {
   setStorage("code-text", textInput.value);
@@ -264,6 +269,7 @@ function addDBEntry(text){
 .then(res => res.json())
 .then(data => console.log(data));
 }
+
 
 function unindent_clicked() {
     let text = textOutput.innerHTML;

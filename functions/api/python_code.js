@@ -12,26 +12,31 @@ export async function onRequestPost({ request, env }) {
       return jsonError("Content exceeds 10,000 characters", 413);
     }
 
-    // Rate limiting (per IP)
+    // Rate limiting by IP (5 seconds)
     const ip =
       request.headers.get("CF-Connecting-IP") ?? "unknown";
 
-    const key = `last_submit:${ip}`;
-    const now = Date.now();
+    const result = await env.DB
+      .prepare("SELECT last_submit FROM users WHERE ip = ?")
+      .bind(ip)
+      .first();
 
-    const lastSubmit = await env.RATE_LIMIT.get(key);
-
-    if (lastSubmit && now - Number(lastSubmit) < 5_000) {
-      return jsonError(
-        "You may only add new entries once every 5 seconds",
-        429
-      );
+    if(!result) {
+      return jsonError("User not registered", 403);
+    }
+    if (Date.now() - result.last_submit < 5000) {
+      return jsonError("You may only submit once every 5 seconds", 429);
     }
 
-    // Store timestamp (expires automatically)
-    await env.RATE_LIMIT.put(key, String(now), {
-      expirationTtl: 60
-    });
+    // Insert/update timestamp
+    await env.DB
+      .prepare(
+        `INSERT INTO users(ip, last_submit)
+        VALUES (?, ?)
+        ON CONFLICT(ip) DO UPDATE SET last_submit = excluded.last_submit`
+      )
+      .bind(ip, Date.now())
+      .run();
 
     // Insert entry into the D1 database
     await env.DB

@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// ../.wrangler/tmp/bundle-Vpgjt9/checked-fetch.js
+// ../.wrangler/tmp/bundle-GiLi15/checked-fetch.js
 var urls = /* @__PURE__ */ new Set();
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
@@ -38,18 +38,18 @@ async function onRequestPost({ request, env }) {
       return jsonError("Content exceeds 10,000 characters", 413);
     }
     const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
-    const key = `last_submit:${ip}`;
-    const now = Date.now();
-    const lastSubmit = await env.RATE_LIMIT.get(key);
-    if (lastSubmit && now - Number(lastSubmit) < 5e3) {
-      return jsonError(
-        "You may only add new entries once every 5 seconds",
-        429
-      );
+    const result = await env.DB.prepare("SELECT last_submit FROM users WHERE ip = ?").bind(ip).first();
+    if (!result) {
+      return jsonError("User not registered", 403);
     }
-    await env.RATE_LIMIT.put(key, String(now), {
-      expirationTtl: 60
-    });
+    if (Date.now() - result.last_submit < 5e3) {
+      return jsonError("You may only submit once every 5 seconds", 429);
+    }
+    await env.DB.prepare(
+      `INSERT INTO users(ip, last_submit)
+        VALUES (?, ?)
+        ON CONFLICT(ip) DO UPDATE SET last_submit = excluded.last_submit`
+    ).bind(ip, Date.now()).run();
     await env.DB.prepare("INSERT INTO python_code (content) VALUES (?)").bind(content).run();
     return new Response(
       JSON.stringify({ success: true }),
@@ -72,7 +72,24 @@ async function onRequestGet({ env }) {
 }
 __name(onRequestGet, "onRequestGet");
 
-// ../.wrangler/tmp/pages-lbD5Fq/functionsRoutes-0.7590997087956197.mjs
+// api/users.js
+async function onRequestPost2({ request, env }) {
+  try {
+    const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
+    await env.DB.prepare(
+      `INSERT OR IGNORE INTO users(ip, last_submit)
+        VALUES (?, ?)`
+    ).bind(ip, Date.now()).run();
+  } catch (err) {
+    return new Response(
+      JSON.stringify({ success: false, error: err.message }),
+      { headers: { "Content-Type": "application/json" }, status: 500 }
+    );
+  }
+}
+__name(onRequestPost2, "onRequestPost");
+
+// ../.wrangler/tmp/pages-rNC2hz/functionsRoutes-0.6264581601559251.mjs
 var routes = [
   {
     routePath: "/api/python_code",
@@ -87,6 +104,13 @@ var routes = [
     method: "POST",
     middlewares: [],
     modules: [onRequestPost]
+  },
+  {
+    routePath: "/api/users",
+    mountPath: "/api",
+    method: "POST",
+    middlewares: [],
+    modules: [onRequestPost2]
   }
 ];
 
@@ -577,7 +601,7 @@ var jsonError2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError2;
 
-// ../.wrangler/tmp/bundle-Vpgjt9/middleware-insertion-facade.js
+// ../.wrangler/tmp/bundle-GiLi15/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -609,7 +633,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// ../.wrangler/tmp/bundle-Vpgjt9/middleware-loader.entry.ts
+// ../.wrangler/tmp/bundle-GiLi15/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -709,4 +733,4 @@ export {
   __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default as default
 };
-//# sourceMappingURL=functionsWorker-0.5921241473696961.mjs.map
+//# sourceMappingURL=functionsWorker-0.33648566185539663.mjs.map
