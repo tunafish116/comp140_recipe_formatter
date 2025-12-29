@@ -77,7 +77,6 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/len\((\w+)\)/g, "the length of $1");
     text = text.replaceAll(/\s*\*\*\s*/g," to the power of ");
     text = text.replaceAll(/sorted\(\s*(\w+)\s*\)/g,"$1 sorted in ascending alhpanumeric order");
-    text = text.replaceAll(/int\(\s*(\w+)\s*\)/g, "$1 parsed as an integer");
     text = text.replaceAll(/float\(\s*(\w+)\s*\)/g, "$1 parsed as a real number");
     text = text.replaceAll(/float\(\s*["'](-?)inf['"]\)/g, "$1∞");
     text = text.replaceAll("None", "<i>null</i>");
