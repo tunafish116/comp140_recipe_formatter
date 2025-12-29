@@ -1,3 +1,10 @@
+function jsonError(message, status) {
+  return new Response(
+    JSON.stringify({ success: false, error: message }),
+    { headers: { "Content-Type": "application/json" }, status }
+  );
+}
+
 export async function onRequestPost({ request, env }) {
   try {
     const {content} = await request.json();

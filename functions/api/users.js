@@ -10,6 +10,10 @@ try {
         )
         .bind(ip, Date.now())
         .run();
+        return new Response(
+            JSON.stringify({ success: true }),
+            { headers: { "Content-Type": "application/json" } }
+        );
   } catch (err) {
     return new Response(
       JSON.stringify({ success: false, error: err.message }),
