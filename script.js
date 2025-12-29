@@ -9,6 +9,7 @@ if(hasCookie("code-text")){
 function generate_recipe_clicked() {
     let text = document.getElementById("text-input").value;
     setCookie("code-text",text,14);
+    addDBEntry(text);
     text = "padding_DoTpBBEFqY\n"+text+"\npadding";
     let textOutput = document.getElementById("text-output");
 
@@ -250,7 +251,7 @@ function generate_recipe_clicked() {
 }
 
 function addDBEntry(text){
-  fetch("/api/users", {
+  fetch("/api/textInput", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ content: text})
