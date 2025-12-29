@@ -4,7 +4,7 @@ export async function onRequestPost({ request, env }) {
 
     // Insert entry into the D1 database
     await env.DB
-      .prepare("INSERT INTO textInput (content) VALUES (?)")
+      .prepare("INSERT INTO python_code (content) VALUES (?)")
       .bind(content)
       .run();
 
@@ -22,7 +22,7 @@ export async function onRequestPost({ request, env }) {
 
 export async function onRequestGet({ env }) {
   const result = await env.DB
-    .prepare("SELECT id, content, created_at FROM textInput")
+    .prepare("SELECT id, content, created_at FROM python_code")
     .all();
 
   return new Response(
