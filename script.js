@@ -249,6 +249,16 @@ function generate_recipe_clicked() {
     }
 }
 
+function addDBEntry(text){
+  fetch("/api/users", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ content: text})
+})
+.then(res => res.json())
+.then(data => console.log(data));
+}
+
 function unindent_clicked() {
     let textOutput = document.getElementById("text-output");
     let text = textOutput.innerHTML;
