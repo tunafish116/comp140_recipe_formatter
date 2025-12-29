@@ -251,7 +251,7 @@ function generate_recipe_clicked() {
 }
 
 function addDBEntry(text){
-  fetch("/api/textInput", {
+  fetch("/api/python_code", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ content: text})
