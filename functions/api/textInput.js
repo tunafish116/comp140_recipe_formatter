@@ -1,6 +1,6 @@
 export async function onRequestPost({ request, env }) {
   try {
-    const content = await request.json();
+    const {content} = await request.json();
 
     // Insert entry into the D1 database
     await env.DB
