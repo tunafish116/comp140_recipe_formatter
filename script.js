@@ -1,17 +1,26 @@
-if(hasCookie("code-text")){
-  let textInput = document.getElementById("text-input");
-  console.log(getCookie("code-text"));
-  textInput.value = getCookie("code-text");
+// Global html references
+let textInput = document.getElementById("text-input");
+let textOutput = document.getElementById("text-output");
+
+
+// Load stored text from localStorage on page load
+let storedText = getStorage("code-text");
+if(storedText){
+  console.log(storedText);
+  textInput.value = storedText;
 }
+
+// Save text to localStorage before unloading the page
+window.addEventListener("beforeunload", () => {
+  setStorage("code-text", textInput.value);
+});
 
 
 
 function generate_recipe_clicked() {
-    let text = document.getElementById("text-input").value;
-    setCookie("code-text",text,14);
+    let text = textInput.value;
     addDBEntry(text);
     text = "padding_DoTpBBEFqY\n"+text+"\npadding";
-    let textOutput = document.getElementById("text-output");
 
 
 
@@ -166,9 +175,6 @@ function generate_recipe_clicked() {
     // explicit list re-format
     text = text.replaceAll(/(^\w|\s)\[(.+)\]/g,"$1$2");
 
-    // TODO maybe? detect maps and 
-    // add a new correspondence x ↦ y to the map z
-
 
 
     // class stuff
@@ -260,7 +266,6 @@ function addDBEntry(text){
 }
 
 function unindent_clicked() {
-    let textOutput = document.getElementById("text-output");
     let text = textOutput.innerHTML;
     // a little bit of jank code to fix consecutive line breaks
     text = text.replaceAll("\n\n","\n:\n");
@@ -275,7 +280,6 @@ function about_clicked(){
 }
 
 function hide_warnings_clicked(){
-  let textOutput = document.getElementById("text-output");
   let text = textOutput.innerHTML;
   text = text.replaceAll(/<mark[^>]+>(.+)<\/mark>/g, "$1");
   console.log(text);
@@ -304,43 +308,24 @@ function tips_clicked(){
 }
 
 
-//*************Cookie stuff*****************//
+//*************LocalStorage stuff*****************//
 
-function setCookie(cname, cvalue, exdays) {
-    const d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    let expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + encodeURIComponent(cvalue) + ";" + expires + ";path=/";
+function setStorage(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (e) {
+    console.warn("localStorage set failed:", e);
+    return false;
+  }
 }
 
-function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-}
-
-function hasCookie(cname) {
-    // Get all cookies as a single string
-    let cookies = document.cookie;
-    
-    // Check if the cookie name exists within the cookies string
-    return cookies.split(';').some(cookie => {
-        // Remove leading spaces and check if the cookie starts with the given name
-        return cookie.trim().startsWith(cname + "=");
-    });
-}
-
-function destroyCookie(cookieName) {
-    // Set the cookie with the same name and path, and an expired date
-    document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+function getStorage(key, defaultValue = null) {
+  try {
+    const item = localStorage.getItem(key);
+    return item !== null ? JSON.parse(item) : defaultValue;
+  } catch (e) {
+    console.warn("localStorage get failed:", e);
+    return defaultValue;
+  }
 }
