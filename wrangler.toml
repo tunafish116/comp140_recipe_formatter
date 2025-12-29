@@ -5,3 +5,7 @@ compatibility_date = "2024-01-01"
 binding = "DB"
 database_name = "recipe-db"
 database_id = "15250b55-66be-4a08-b7a8-8045c30f0d0d"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "45dc11e92beb4d248bfdd02f54a3fc88"
