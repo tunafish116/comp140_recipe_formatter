@@ -274,10 +274,12 @@ function addDBEntry(text){
 function unindent_clicked() {
     let text = textOutput.innerHTML;
     // a little bit of jank code to fix consecutive line breaks
+    text = "\n"+text;
     text = text.replaceAll("\n\n","\n:\n");
     text = text.replaceAll(/\n\s{4}/g,"\n"); // this is the one that actually un-indents
     text = text.replaceAll("\n:\n","\n\n");
     console.log(text);
+    text = text.slice(1);
     textOutput.innerHTML = text;
 }
 
