@@ -11,7 +11,7 @@
                 <td style="padding: 20px; border: none;" id="main-block">
                     <div id="main-title">
                         <h1 style="margin-top: 0px;">Comp 140 Recipe Formatter</h1>
-                        <p>Version 1.6</p>
+                        <p>Version 1.7</p>
                     </div>
                     <br>
                     <button onclick="about_clicked()">About</button>
@@ -23,6 +23,9 @@
                     <button onclick="generate_recipe_clicked()">Generate Recipe</button>
                     <button onclick="unindent_clicked()">un-indent</button>
                     <br><br>
+                    <p id="warning-text" hidden>Format warnings are highlighted in yellow. Hover over the warnings to learn more.
+                        <a style="color: blue; text-decoration-color: blue;" onclick="hide_warnings_clicked()"><u>Hide Warnings.</u></a>
+                    </p>
                     <div>
                         <pre id="text-output" rows="12" cols="100"></pre>
                     </div>

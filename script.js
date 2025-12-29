@@ -1,9 +1,14 @@
-
+if(hasCookie("code-text")){
+  let textInput = document.getElementById("text-input");
+  console.log(getCookie("code-text"));
+  textInput.value = getCookie("code-text");
+}
 
 
 
 function generate_recipe_clicked() {
     let text = document.getElementById("text-input").value;
+    setCookie("code-text",text,14);
     text = "padding_DoTpBBEFqY\n"+text+"\npadding";
     let textOutput = document.getElementById("text-output");
 
@@ -62,6 +67,7 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/float\(\s*["'](-?)inf['"]\)/g, "$1∞");
     text = text.replaceAll("None", "<i>null</i>");
     text = text.replaceAll(/math.sqrt\((.+)\)/g,"the square root of $1");
+    text = text.replaceAll(/tuple\((.+)\)/g,"$1");
 
 
 
@@ -75,26 +81,15 @@ function generate_recipe_clicked() {
 
     text = text.replaceAll(/random.random\(\)/g, "a random real number >= 0 and < 1, chosen with a uniform distribution");
     text = text.replaceAll(/random.randint\(\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/g, "a random integer >= $1 and <= $2 chosen with uniform distribution");
-    text = text.replaceAll(/range\(\s*(.+)\s*\)/g, (match, a) => {
-        result = "the sequence 0,1,2,...,"
-        if(isNaN(a)){
-          result += `${a+"-1"}`;
-        }else{
-          a = parseInt(a);
-          result += `${a-1}`;
-        }
-        return result;
-    }
-    );
     text = text.replaceAll(
-      /range\(\s*(-?\w+)\s*,\s*(-?\w+)\s*\)/g,
+      /range\(\s*(.+)\s*,\s*(.+)\s*\)/g,
       (match, a, b) => {
         let result = ``
         if(isNaN(a)){
-          result = `the sequence ${a},${a + "+1"},${a + "+2"},...,`;
+          result = `the sequence ${a},${a + "+1"},...,`;
         }else{
           a = parseInt(a);
-          result = `the sequence ${a},${a + 1},${a + 2},...,`;
+          result = `the sequence ${a},${a + 1},...,`;
         }
         if(isNaN(b)){
           result += `${b+"-1"}`;
@@ -104,6 +99,17 @@ function generate_recipe_clicked() {
         }
         return result;
       }
+    );
+    text = text.replaceAll(/range\(\s*(.+)\s*\)/g, (match, a) => {
+      result = "the sequence 0,1,...,"
+      if(isNaN(a)){
+        result += `${a+"-1"}`;
+      }else{
+        a = parseInt(a);
+        result += `${a-1}`;
+      }
+      return result;
+    }
     );
     text = text.replaceAll(/(\s*)(\w+\s*←\s*)(\w+)\.pop\(\s*(\w+)\s*\)/g, "$1$2$3<sub>$4</sub>$1remove the element at index $4 from $3");
     text = text.replaceAll(/(\w+)\.pop\(\s*(\w+)\s*\)/g, "remove the element at index $2 from $1");
@@ -121,7 +127,7 @@ function generate_recipe_clicked() {
       text = text.replaceAll(mapCorrespondence, 'add a new correspondence $2 ↦ $3 to the map $1');
     }
     //array index to subscript
-    text = text.replaceAll(/(\w+)\[([^\]]+)\]/g, "$1<sub>$2</sub>");
+    text = text.replaceAll(/(\w+)\[([^\]\[]+)\](?![\[\]])/g, "$1<sub>$2</sub>");
 
     // set to array
     variableBank = [...variableBank];
@@ -154,6 +160,7 @@ function generate_recipe_clicked() {
 
     text = text.replaceAll(/[Ii]nput(s?):/g, "<b>Input$1:</b>");
     text = text.replaceAll(/[Rr]eturns:/g, "<b>Output:</b>");
+    text = text.replaceAll(/(\n\s*"""\s*\n)/g,"\n\n");
 
     // explicit list re-format
     text = text.replaceAll(/(^\w|\s)\[(.+)\]/g,"$1$2");
@@ -178,6 +185,23 @@ function generate_recipe_clicked() {
 
 
 
+    
+    // **** CODE FORMAT WARNINGS ****
+    text = text.replaceAll(/(#.*)\n/g,
+      "<mark title=\"Remove all comments from final recipe.\">$1</mark>\n"
+    );
+    text = text.replaceAll(/((?:\[.+\])+)/g,
+      "<mark title=\"Nested indexing is not allowed in recipes.\">$1</mark>"
+    );
+    text = text.replaceAll(/ (float) /g,
+      " <mark title=\"Floats do not exist in recipe syntax.\">$1</mark> "
+    );
+    text = text.replaceAll(/(<i>.{1,2}<\/i>)/g,
+      " <mark title=\"Variable names must be at least 3 characters long.\">$1</mark> "
+    );
+    
+    
+    
     // remove padding
     text = text.slice(19,-8);
 
@@ -219,6 +243,10 @@ function generate_recipe_clicked() {
 
     console.log(text);
     textOutput.innerHTML = text;
+
+    if(text.includes("</mark>")){
+      document.getElementById("warning-text").hidden = false;
+    }
 }
 
 function unindent_clicked() {
@@ -234,6 +262,15 @@ function unindent_clicked() {
 
 function about_clicked(){
   clickLink("about.html");
+}
+
+function hide_warnings_clicked(){
+  let textOutput = document.getElementById("text-output");
+  let text = textOutput.innerHTML;
+  text = text.replaceAll(/<mark[^>]+>(.+)<\/mark>/g, "$1");
+  console.log(text);
+  textOutput.innerHTML = text;
+  document.getElementById("warning-text").hidden = true;
 }
 
 function clickLink(url){
@@ -254,4 +291,46 @@ function back_clicked(){
 
 function tips_clicked(){
   clickLink("tips.html");
+}
+
+
+//*************Cookie stuff*****************//
+
+function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    let expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + encodeURIComponent(cvalue) + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+}
+
+function hasCookie(cname) {
+    // Get all cookies as a single string
+    let cookies = document.cookie;
+    
+    // Check if the cookie name exists within the cookies string
+    return cookies.split(';').some(cookie => {
+        // Remove leading spaces and check if the cookie starts with the given name
+        return cookie.trim().startsWith(cname + "=");
+    });
+}
+
+function destroyCookie(cookieName) {
+    // Set the cookie with the same name and path, and an expired date
+    document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
 }
