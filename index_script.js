@@ -256,6 +256,8 @@ function generate_recipe_clicked() {
 
     if(text.includes("</mark>")){
       document.getElementById("warning-text").hidden = false;
+    }else{
+        document.getElementById("warning-text").hidden = true;
     }
 }
 
