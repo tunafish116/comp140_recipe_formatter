@@ -285,7 +285,7 @@ function about_clicked(){
 
 function hide_warnings_clicked(){
   let text = textOutput.innerHTML;
-  text = text.replaceAll(/<mark[^>]+>(.+)<\/mark>/g, "$1");
+  text = text.replaceAll(/<\/?mark[^>]+>/g, "");
   console.log(text);
   textOutput.innerHTML = text;
   document.getElementById("warning-text").hidden = true;
