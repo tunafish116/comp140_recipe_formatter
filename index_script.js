@@ -259,17 +259,6 @@ function generate_recipe_clicked() {
     }
 }
 
-function addDBEntry(text){
-  fetch("/api/python_code", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ content: text})
-})
-.then(res => res.json())
-.then(data => console.log(data));
-}
-
-
 function unindent_clicked() {
     let text = textOutput.innerHTML;
     // a little bit of jank code to fix consecutive line breaks
@@ -283,6 +272,12 @@ function unindent_clicked() {
 }
 
 function about_clicked(){
+  fetch("/api/counter", { 
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "about" }),
+    keepalive: true
+  });
   clickLink("about.html");
 }
 
@@ -294,45 +289,6 @@ function hide_warnings_clicked(){
   document.getElementById("warning-text").hidden = true;
 }
 
-function clickLink(url){
-  const link = document.createElement('a');
-  link.href = url;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
-function back_to_safety_clicked(){
-  clickLink("https://x.com/tecariowolf");
-}
-
-function back_clicked(){
-  clickLink("index.html");
-}
-
 function tips_clicked(){
   clickLink("tips.html");
-}
-
-
-//*************LocalStorage stuff*****************//
-
-function setStorage(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-    return true;
-  } catch (e) {
-    console.warn("localStorage set failed:", e);
-    return false;
-  }
-}
-
-function getStorage(key, defaultValue = null) {
-  try {
-    const item = localStorage.getItem(key);
-    return item !== null ? JSON.parse(item) : defaultValue;
-  } catch (e) {
-    console.warn("localStorage get failed:", e);
-    return defaultValue;
-  }
 }
