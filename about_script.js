@@ -42,15 +42,17 @@ function join_us_clicked(){
 }
 
 quadEaseOut = t => t * (2 - t);
+const animationDuration = 1200; // 1.2 seconds
+const frameTime = 40; // 40 ms, 25 FPS
 
 async function playAnimation(){
     let header = document.getElementById("flashbang-count-h1");
-    for(let i=0; i<1; i+=0.02){
+    for(let i=0; i<1; i+=frameTime/animationDuration){
         let eased = quadEaseOut(i);
         let displayCount = Math.floor(eased * count);
         header.textContent = displayCount + 
         " people were flashbanged by this page.";
-        await sleep(20);
+        await sleep(frameTime);
     }
     header.textContent = count + 
         " people were flashbanged by this page.";
