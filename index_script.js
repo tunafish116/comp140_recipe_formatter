@@ -50,6 +50,13 @@ function generate_recipe_clicked() {
       });
     }
 
+    // special case for <sub> tag
+    if(variableBank.has("sub")){
+      variableBank.delete("sub");
+      variableBank.add("%sub%");
+      text = text.replaceAll(/\bsub\b/g, "%sub%");
+    }
+
     const mapRegex = /\b(\w+)\s*=\s*\{.*\}/g;
     let mapBank = new Set();
     while ((match = mapRegex.exec(text)) !== null) {
@@ -144,9 +151,9 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/(\w+)\[([^\]\[]+)\](?![\[\]])/g, "$1<sub>$2</sub>");
 
     // set to array
-    variableBank = [...variableBank];
-    variableBank = variableBank.join('|');
-    const italicize = new RegExp(`([^\\w])(${variableBank})([^\\w])`,'g');
+    let variableArray = [...variableBank];
+    let variableString = variableArray.join('|');
+    const italicize = new RegExp(`([^\\w])(${variableString})([^\\w>])`,'g');
 
 
     
@@ -192,6 +199,11 @@ function generate_recipe_clicked() {
       className = className[0].toLowerCase()+className.slice(1);
       text = text.replaceAll(/<i>self<\/i>\._?(\w+)/g, "<i>self</i>.<i>$1</i>");
       text = text.replaceAll("<i>self</i>","<i>"+className+"</i>");
+    }
+
+    // restore reserved <sub> tag
+    if(variableBank.has("%sub%")){
+      text = text.replaceAll(/%sub%/g, "sub");
     }
 
 
