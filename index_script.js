@@ -304,5 +304,11 @@ function hide_warnings_clicked(){
 }
 
 function tips_clicked(){
+  fetch("/api/counter", { 
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "tips" }),
+    keepalive: true
+  });
   clickLink("tips.html");
 }

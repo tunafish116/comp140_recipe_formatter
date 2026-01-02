@@ -24,19 +24,43 @@
                     <pre class="border">
 
 1. Don't access nested elements directly. This because you can't do double subscripts in recipes.
-Example:
+Examples:
     instead of: 
         grid[1][2] = 3
     use:
         grid[1] = row
         row[2] = 3
+    instead of:
+        age[people[1]] = 2
+    use:
+        person = people[1]
+        age[person] = 2
 
 this also applies to nested dictionaries as well.
 
 
 
 
-2. Please still check each line for mistakes. If you put that much trust in a
+2. Class methods are often more concisely described in plain words.
+
+This formatter automatically transforms all class methods with the format:
+    object.method()
+Into:
+    the value returned by calling method() on the object class
+Sometimes, this makes sense. However, for more simple methods, especially getters
+and setters, it is more concise to describe what the method does in plain words.
+
+For example, if this is your code:
+    area = shape.area()
+You should refactor your output from:
+    area ← the value returned by calling area() on the object shape
+To:
+    area ← the area of shape
+
+
+
+
+3. Please still check each line for mistakes. If you put that much trust in a
  random person's code to do your assignment, I'm very flattered, thank you,
  but please don't. Some more exotic aspects of python have not been implemented
  into the recipe formatter yet.
@@ -50,16 +74,14 @@ this also applies to nested dictionaries as well.
     - methods
  Examples of unrecognized python features:
     - Sets
-    - Floor division
     - List comprehensions
     - Default dictionaries
-    - Type casting
     - Many many more
 
 
 
 
-3. Why can't it write my inputs and outputs WAAAAAHH
+4. Why can't it write my inputs and outputs WAAAAAHH
 
 The point of this tool is to show how stupid certain aspects of recipes are.
 The fact a couple lines of replaceAll using regex can get you to 80% of a full
@@ -73,7 +95,7 @@ Sorry you'll still have to write your inputs and outputs yourself :3
 
 
 
-4. Other stuff that may be useful
+5. Other stuff that may be useful
     - To italicize "var_name", add "var_name=" somewhere in your code text
     - To recognize "var_name" as a map, add "var_name={}" somewhere in your code text
     - To escape the stress of Comp140, click on the "about" button
