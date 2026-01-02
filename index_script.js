@@ -68,7 +68,6 @@ function generate_recipe_clicked() {
     console.log(mapBank);
 
 
-    //  /([\w\[\]\(\)]+)\s?([\+-\\\*])=\s?([\w\[\]\(\)]+)/g 
     text = text.replaceAll("for ", "for each ");
     text = text.replaceAll("elif ", "otherwise if ");
     text = text.replaceAll(/(for each|while)(.*):\s*\n/g, "<b>$1</b>$2 <b>do</b>\n");
@@ -157,7 +156,7 @@ function generate_recipe_clicked() {
 
 
     
-    if(variableBank != ""){
+    if(variableString != ""){
       //ensure that there is a 2 character gap between variables so regex can capture all variables
       text = text.replaceAll(",",", "); 
       //italicize variables
@@ -165,11 +164,6 @@ function generate_recipe_clicked() {
       //restore commas
       text = text.replaceAll(", ",",");
     }
-
-    // experimental code below for later versions.
-    //text = text.replaceAll(/def\s+(\w+).+/g,"<hr style=\"border-color:black\"><b>Name:</b> $1<hr style=\"border-color:black\">");
-    //text = text.replaceAll("*","\u00d7");
-    //add ; to the end of each line that isn't class, if, else, elif, while, for
 
     text = text.replaceAll(/def\s+(\w+).+/g,"<b>Name:</b> $1");
     text = text.replaceAll("return ","<b>return</b> ");
@@ -187,19 +181,6 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/(^\w|\s)\[(.+)\]/g,"$1$2");
 
 
-
-    // class stuff
-    let classNames = /class\s+(\w+):/g.exec(text);
-    let className = classNames? classNames[1]:null;
-    if(className){
-      text = text.replace(/__init__/,"Initialize"+className);
-      // TODO in the __init__ method replace self. with 
-      // create varName as a private member field inside the object className
-
-      className = className[0].toLowerCase()+className.slice(1);
-      text = text.replaceAll(/<i>self<\/i>\._?(\w+)/g, "<i>self</i>.<i>$1</i>");
-      text = text.replaceAll("<i>self</i>","<i>"+className+"</i>");
-    }
 
     // restore reserved <sub> tag
     if(variableBank.has("%sub%")){
