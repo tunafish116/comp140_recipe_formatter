@@ -1,3 +1,5 @@
+/* Global styles */
+
 div{
     border: 2px solid black;
     padding: 5px;
@@ -11,3 +13,4 @@ div{
 button{
     font-size: large;
 }
+

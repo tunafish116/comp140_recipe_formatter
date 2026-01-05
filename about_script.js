@@ -1,3 +1,6 @@
+window.onload = () =>
+document.getElementById("dark-stylesheet").disabled = !getStorage("dark-mode", isDarkMode);
+
 let count = 0;
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));

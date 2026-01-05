@@ -8,6 +8,10 @@ td.content{
     
 }
 
+td.content a{
+    color: #2b00ff;
+}
+
 table{
     border-spacing: 10px;
 }

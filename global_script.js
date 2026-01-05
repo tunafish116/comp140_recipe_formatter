@@ -1,3 +1,16 @@
+/**
+ * global_script.js
+ * 
+ * Contains global functions and variables used across multiple scripts.
+ * Must be included in all HTML files.
+ */
+
+
+// Global variables
+const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+
+
 function addDBEntry(text){
   fetch("/api/python_code", {
   method: "POST",
@@ -38,5 +51,15 @@ function getStorage(key, defaultValue = null) {
   } catch (e) {
     console.warn("localStorage get failed:", e);
     return defaultValue;
+  }
+}
+
+function deleteStorage(key) {
+  try {
+    localStorage.removeItem(key);
+    return true;
+  } catch (e) {
+    console.warn("localStorage delete failed:", e);
+    return false;
   }
 }

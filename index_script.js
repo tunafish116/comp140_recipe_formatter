@@ -1,7 +1,15 @@
-// Global html references
+// index.html references
 let textInput = document.getElementById("text-input");
 let textOutput = document.getElementById("text-output");
+let settingsContainer = document.getElementById("settings-container");
+let darkStylesheet = document.getElementById("dark-stylesheet");
+let darkToggle = document.getElementById("dark-toggle");
+let commentToggle = document.getElementById("comment-toggle");
+let methodToggle = document.getElementById("method-toggle");
 
+// Initialize settings from localStorage
+window.onload = () =>
+applySettings();
 
 // Load stored text from localStorage on page load
 let storedText = getStorage("code-text");
@@ -136,8 +144,21 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/(\w+)\.insert\(\s*(\w+)\s*,\s*(\w)\s*\)/g, "insert $3 into $1 at index $2");
     text = text.replaceAll(/(\w+)\.keys\(\)/g, "the keys of $1");
     text = text.replaceAll(/(\w+)\.values\(\)/g, "the values of $1");
-    text = text.replaceAll(/(\w+)\.(\w+\([^\)]*\))/g, "the value returned by calling $2 on the object $1");
     text = text.replaceAll(/(\w+)\[\s?-1\s?\]/g, "the last element of $1");
+    if(settings.formatMethods){
+      text = text.replaceAll(/(\w+)\.(\w+\([^\)]*\))/g, "the value returned by calling $2 on the object $1");
+    }else{
+      text = text.replaceAll(/(\w+\.\w+\([^\)]*\))/g,
+        "<mark title=\"Replace method calls with recipe syntax.\">$1</mark>"
+      );
+    }
+    if(settings.removeComments){
+      text = text.replaceAll(/\n\s*#.*\n/g, "\n");
+    }else{
+      text = text.replaceAll(/(#.*)\n/g,
+        "<mark title=\"Remove all comments from final recipe.\">$1</mark>\n"
+      );
+    }
 
     // if array is actually map, make assignments correspondences instead
     mapBank = [...mapBank];
@@ -190,10 +211,7 @@ function generate_recipe_clicked() {
 
 
     
-    // **** CODE FORMAT WARNINGS ****
-    text = text.replaceAll(/(#.*)\n/g,
-      "<mark title=\"Remove all comments from final recipe.\">$1</mark>\n"
-    );
+    // **** OTHER CODE FORMAT WARNINGS ****
     text = text.replaceAll(/((?:\[.+\])+)/g,
       "<mark title=\"Nested indexing is not allowed in recipes.\">$1</mark>"
     );
@@ -203,9 +221,10 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/(<i>.{1,2}<\/i>)/g,
       " <mark title=\"Variable names must be at least 3 characters long.\">$1</mark> "
     );
-    
-    
-    
+
+
+
+
     // remove padding
     text = text.slice(19,-8);
 
@@ -292,4 +311,55 @@ function tips_clicked(){
     keepalive: true
   });
   clickLink("tips.html");
+}
+
+function settings_clicked(){
+  fetch("/api/counter", { 
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "settings" }),
+  });
+  settingsContainer.style.display = "block";
+  darkToggle.checked = settings.darkMode;
+  commentToggle.checked = settings.removeComments;
+  methodToggle.checked = settings.formatMethods;
+}
+
+
+// Update dark mode stylesheet based on toggle
+darkToggle.addEventListener("change", () => {
+    fetch("/api/counter", { 
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: "dark_mode" }),
+    });
+    darkStylesheet.disabled = !darkToggle.checked;
+});
+
+function saveSettings(){
+    setStorage("dark-mode", darkToggle.checked);
+    setStorage("remove-comments", commentToggle.checked);
+    setStorage("format-methods", methodToggle.checked);
+    applySettings();
+    settingsContainer.style.display = "none";
+}
+
+function cancelSettings(){
+    settingsContainer.style.display = "none";
+    applySettings();
+}
+
+function applySettings(){
+  settings = {
+    darkMode: getStorage("dark-mode", isDarkMode),
+    removeComments: getStorage("remove-comments", true),
+    formatMethods: getStorage("format-methods", true)
+  };
+  darkStylesheet.disabled = !settings.darkMode;
+}
+
+function restoreDefault(){
+    darkToggle.checked = isDarkMode;
+    commentToggle.checked = true;
+    methodToggle.checked = true;
 }

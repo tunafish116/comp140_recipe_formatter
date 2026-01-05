@@ -5,6 +5,7 @@
         <script src="global_script.js"></script>
         <script src="tips_script.js"></script>
         <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="dark.css" id="dark-stylesheet" disabled>
         <link rel="icon" type="image/x-icon" href="icon.png">
     </head>
     <body>
@@ -41,22 +42,22 @@ this also applies to nested dictionaries as well.
 
 
 
-2. Class methods are often more concisely described in plain words.
+2. Method calls are often more concisely described in plain words.
 
-This formatter automatically transforms all class methods with the format:
+This formatter automatically transforms all methods calls with the format:
     object.method()
 Into:
     the value returned by calling method() on the object class
+
 Sometimes, this makes sense. However, for more simple methods, especially getters
 and setters, it is more concise to describe what the method does in plain words.
-
 For example, if this is your code:
     area = shape.area()
-You should refactor your output from:
-    area ← the value returned by calling area() on the object shape
-To:
+You should rewrite your recipe as:
     area ← the area of shape
 
+You can turn off this behavior in the settings, and instead, the formatter will
+only highlight method calls without changing them.
 
 
 

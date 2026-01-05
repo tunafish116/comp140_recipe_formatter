@@ -3,19 +3,66 @@
     <head>
         <title>Recipe Formatter</title>
         <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="index_styles.css">
+        <link rel="stylesheet" href="dark.css" id="dark-stylesheet" disabled>
         <link rel="icon" type="image/x-icon" href="icon.png">
     </head>
     <body>
+        <div id="settings-container">
+            <table>
+                <tr>
+                    <td>
+                        <p style = "margin-right: 100px;">Dark mode</p>
+                    </td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" id="dark-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Remove comments</p>
+                    </td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" id="comment-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="margin-right: 20px;">Format method calls</p>
+                    </td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" id="method-toggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                </tr>
+                <br>
+            </table>
+            <br>
+            <br>
+                <button onclick="saveSettings()" style="margin-left: 10px;">Save</button>
+                <button onclick="cancelSettings()">Cancel</button>
+                <button onclick="restoreDefault()">Restore Default</button>
+            </ul>
+        </div>
         <table style="margin: auto; border: none;">
             <tr>
                 <td style="padding: 20px; border: none;" id="main-block">
                     <div id="main-title">
                         <h1 style="margin-top: 0px;">Comp 140 Recipe Formatter</h1>
-                        <p>Version 1.7</p>
+                        <p>Version 1.8</p>
                     </div>
                     <br>
                     <button onclick="about_clicked()">About</button>
                     <button onclick="tips_clicked()">Tips</button>
+                    <button onclick="settings_clicked()">Settings</button>
                     <br><br>
                     <p>Paste your Python code here.</p>
                     <textarea id="text-input" rows="12" cols="100"></textarea>
