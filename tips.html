@@ -24,7 +24,7 @@
                     <button onclick="back_clicked()">Back</button>
                     <pre class="border">
 
-1. Don't access nested elements directly. This because you can't do double subscripts in recipes.
+<b>1.</b> Don't access nested elements directly. This because you can't do double subscripts in recipes.
 Examples:
     instead of: 
         grid[1][2] = 3
@@ -42,26 +42,22 @@ this also applies to nested dictionaries as well.
 
 
 
-2. Method calls are often more concisely described in plain words.
-
-This formatter automatically transforms all methods calls with the format:
-    object.method()
-Into:
-    the value returned by calling method() on the object class
-
-Sometimes, this makes sense. However, for more simple methods, especially getters
-and setters, it is more concise to describe what the method does in plain words.
+<b>2.</b> Methods that perform simple actions, such as getters, setters, and calculators
+are often more concisely described in plain words.
 For example, if this is your code:
     area = shape.area()
 You should rewrite your recipe as:
-    area ← the area of shape
+    <i>area</i> ← the area of <i>shape</i>
 
-You can turn off this behavior in the settings, and instead, the formatter will
-only highlight method calls without changing them.
+There is an option in settings to automatically transform all methods calls with the format:
+    object.method(...)
+Into:
+    the value returned by calling method(...) on the object <i>object</i>
 
 
 
-3. Please still check each line for mistakes. If you put that much trust in a
+
+<b>3.</b> Please still check each line for mistakes. If you put that much trust in a
  random person's code to do your assignment, I'm very flattered, thank you,
  but please don't. Some more exotic aspects of python have not been implemented
  into the recipe formatter yet.
@@ -72,17 +68,18 @@ only highlight method calls without changing them.
     - For and while loops
     - Range
     - Random
-    - methods
  Examples of unrecognized python features:
     - Classes
     - List comprehensions
     - Default dictionaries
+    - Sets
+    - Lambda functions
     - Many many more
 
 
 
 
-4. Why can't it write my inputs and outputs WAAAAAHH
+<b>4.</b> Why can't it write my inputs and outputs WAAAAAHH
 
 The point of this tool is to show how stupid certain aspects of recipes are.
 The fact a couple lines of replaceAll using regex can get you to 80% of a full
@@ -96,9 +93,9 @@ Sorry you'll still have to write your inputs and outputs yourself :3
 
 
 
-5. Other stuff that may be useful
+<b>5.</b> Other stuff that may be useful
     - To italicize "var_name", add "var_name=" somewhere in your code text
-    - To recognize "var_name" as a map, add "var_name={}" somewhere in your code text
+    - To recognize "var_name" as a dictionary, add "var_name={}" somewhere in your code text
     - To escape the stress of Comp140, click on the "about" button
 
 

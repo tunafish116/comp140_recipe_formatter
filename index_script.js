@@ -80,9 +80,12 @@ function generate_recipe_clicked() {
     text = text.replaceAll("elif ", "otherwise if ");
     text = text.replaceAll(/(for each|while)(.*):\s*\n/g, "<b>$1</b>$2 <b>do</b>\n");
     text = text.replaceAll(/(if.*)\sin\s/g, "$1 is in ");
+    text = text.replaceAll(/(if.*)\snot\sis\s/g, "$1 is not ");
     text = text.replaceAll(/(if|otherwise if|else)(.*):\s*\n/g, "<b>$1</b>$2 <b>then</b>\n");
     text = text.replaceAll(/([\w\[\]\(\)_]+)\s?([\+-/\*])=\s?("?[\w\[\]\(\)]+"?)/g, "$1 = $1 $2 $3");
-    text = text.replaceAll(/\s*!=\s*/g," is not equal to ");
+    text = text.replaceAll(/\s*!=\s*/g," ≠ ");
+    text = text.replaceAll(/\s*<=\s*/g," ≤ ");
+    text = text.replaceAll(/\s*>=\s*/g," ≥ ");
     text = text.replaceAll("=","←");
     text = text.replaceAll("←←","=");
     text = text.replaceAll(/([<>])\u2190/g,"$1=");
@@ -91,7 +94,6 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/len\((\w+)\)/g, "the length of $1");
     text = text.replaceAll(/\s*\*\*\s*/g," to the power of ");
     text = text.replaceAll(/sorted\(\s*(\w+)\s*\)/g,"$1 sorted in ascending alhpanumeric order");
-    text = text.replaceAll(/float\(\s*(\w+)\s*\)/g, "$1 parsed as a real number");
     text = text.replaceAll(/float\(\s*["'](-?)inf['"]\)/g, "$1∞");
     text = text.replaceAll("None", "<i>null</i>");
     text = text.replaceAll(/math.sqrt\((.+)\)/g,"the square root of $1");
@@ -107,8 +109,8 @@ function generate_recipe_clicked() {
     });
 
 
-    text = text.replaceAll(/random.random\(\)/g, "a random real number >= 0 and < 1, chosen with a uniform distribution");
-    text = text.replaceAll(/random.randint\(\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/g, "a random integer >= $1 and <= $2 chosen with uniform distribution");
+    text = text.replaceAll(/random.random\(\)/g, "a random real number ≥ 0 and < 1, chosen with a uniform distribution");
+    text = text.replaceAll(/random.randint\(\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/g, "a random integer ≥ $1 and ≤ $2 chosen with uniform distribution");
     text = text.replaceAll(
       /range\(\s*(.+)\s*,\s*(.+)\s*\)/g,
       (match, a, b) => {
@@ -153,7 +155,7 @@ function generate_recipe_clicked() {
       );
     }
     if(settings.removeComments){
-      text = text.replaceAll(/\n\s*#.*\n/g, "\n");
+      text = text.replaceAll(/\s*#.*\n/g, "");
     }else{
       text = text.replaceAll(/(#.*)\n/g,
         "<mark title=\"Remove all comments from final recipe.\">$1</mark>\n"
@@ -215,7 +217,7 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/((?:\[.+\])+)/g,
       "<mark title=\"Nested indexing is not allowed in recipes.\">$1</mark>"
     );
-    text = text.replaceAll(/ (float) /g,
+    text = text.replaceAll(/ (floats?) /g,
       " <mark title=\"Floats do not exist in recipe syntax.\">$1</mark> "
     );
     text = text.replaceAll(/(<i>.{1,2}<\/i>)/g,
@@ -353,7 +355,7 @@ function applySettings(){
   settings = {
     darkMode: getStorage("dark-mode", isDarkMode),
     removeComments: getStorage("remove-comments", true),
-    formatMethods: getStorage("format-methods", true)
+    formatMethods: getStorage("format-methods", false)
   };
   darkStylesheet.disabled = !settings.darkMode;
 }
@@ -361,5 +363,5 @@ function applySettings(){
 function restoreDefault(){
     darkToggle.checked = isDarkMode;
     commentToggle.checked = true;
-    methodToggle.checked = true;
+    methodToggle.checked = false;
 }
