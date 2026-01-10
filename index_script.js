@@ -91,7 +91,7 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/([<>])\u2190/g,"$1=");
     const appendRegex = /(\w+)\.append\((.+)\)\s*\n/g;
     text = text.replaceAll(appendRegex, "append $2 to the end of $1\n");
-    text = text.replaceAll(/len\((\w+)\)/g, "the length of $1");
+    text = text.replaceAll(/len\(\s*(\w+)\s*\)/g, "the length of $1");
     text = text.replaceAll(/\s*\*\*\s*/g," to the power of ");
     text = text.replaceAll(/sorted\(\s*(\w+)\s*\)/g,"$1 sorted in ascending alhpanumeric order");
     text = text.replaceAll(/float\(\s*["'](-?)inf['"]\)/g, "$1∞");
@@ -122,7 +122,11 @@ function generate_recipe_clicked() {
           result = `the sequence ${a},${a + 1},...,`;
         }
         if(isNaN(b)){
-          result += `${b+"-1"}`;
+          if(/\+\s?1\s?$/.test(b)){
+            result += `${b.replace(/\+\s?1\s?$/,"")}`;
+          }else{
+            result += `${b+"-1"}`;
+          }
         }else{
           b = parseInt(b);
           result += `${b-1}`;
@@ -133,7 +137,11 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/range\(\s*(.+)\s*\)/g, (match, a) => {
       result = "the sequence 0,1,...,"
       if(isNaN(a)){
-        result += `${a+"-1"}`;
+        if(/\+\s?1\s?$/.test(a)){
+          result += `${a.replace(/\+\s?1\s?$/,"")}`;
+        }else{
+          result += `${a+"-1"}`;
+        }
       }else{
         a = parseInt(a);
         result += `${a-1}`;
@@ -155,7 +163,7 @@ function generate_recipe_clicked() {
       );
     }
     if(settings.removeComments){
-      text = text.replaceAll(/(\n?)\s*#.*\n/g, "$1");
+      text = text.replaceAll(/\n?\s*#.*\n/g, "\n");
     }else{
       text = text.replaceAll(/(#.*)\n/g,
         "<mark title=\"Remove all comments from final recipe.\">$1</mark>\n"
