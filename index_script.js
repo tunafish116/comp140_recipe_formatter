@@ -155,7 +155,7 @@ function generate_recipe_clicked() {
       );
     }
     if(settings.removeComments){
-      text = text.replaceAll(/\s*#.*\n/g, "");
+      text = text.replaceAll(/\n\s*#.*/g, "");
     }else{
       text = text.replaceAll(/(#.*)\n/g,
         "<mark title=\"Remove all comments from final recipe.\">$1</mark>\n"
