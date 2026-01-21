@@ -91,14 +91,14 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/([<>])\u2190/g,"$1=");
     const appendRegex = /(\w+)\.append\((.+)\)\s*\n/g;
     text = text.replaceAll(appendRegex, "append $2 to the end of $1\n");
+    text = text.replaceAll(/\s*\*\*\s*2/g,"²");
     text = text.replaceAll(/len\(\s*(\w+)\s*\)/g, "the length of $1");
-    text = text.replaceAll(/\s*\*\*\s*2/g," squared ");
     text = text.replaceAll(/(\w+)\s*\*\*\s*0\.5/g,"the square root of $1");
     text = text.replaceAll(/\s*\*\*\s*/g," to the power of ");
     text = text.replaceAll(/sorted\(\s*(\w+)\s*\)/g,"$1 sorted in ascending alhpanumeric order");
     text = text.replaceAll(/float\(\s*["'](-?)inf['"]\)/g, "$1∞");
     text = text.replaceAll("None", "<i>null</i>");
-    text = text.replaceAll(/math.sqrt\((.+)\)/g,"the square root of $1");
+    text = text.replaceAll(/math.sqrt\((.+)\)/g,"the square root of ($1)");
     text = text.replaceAll(/tuple\((.+)\)/g,"$1");
 
 
