@@ -157,6 +157,7 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/(\w+)\.keys\(\)/g, "the keys of $1");
     text = text.replaceAll(/(\w+)\.values\(\)/g, "the values of $1");
     text = text.replaceAll(/(\w+)\[\s?-1\s?\]/g, "the last element of $1");
+    text = text.replaceAll(/def\s+(\w+).+/g,"<b>Name:</b> $1");
     if(settings.formatMethods){
       text = text.replaceAll(/(\w+)\.(\w+\([^\)]*\))/g, "the value returned by calling $2 on the object $1");
     }else{
@@ -198,7 +199,6 @@ function generate_recipe_clicked() {
       text = text.replaceAll(", ",",");
     }
 
-    text = text.replaceAll(/def\s+(\w+).+/g,"<b>Name:</b> $1");
     text = text.replaceAll("return ","<b>return</b> ");
     
 
