@@ -78,32 +78,32 @@ function generate_recipe_clicked() {
 
     text = text.replaceAll("for ", "for each ");
     text = text.replaceAll("elif ", "otherwise if ");
-    text = text.replaceAll(/(for each|while)(.*):\s*\n/g, "<b>$1</b>$2 <b>do</b>\n");
-    text = text.replaceAll(/(if.*)\sin\s/g, "$1 is in ");
-    text = text.replaceAll(/(if.*)\snot\sis\s/g, "$1 is not ");
-    text = text.replaceAll(/(if|otherwise if|else)(.*):\s*\n/g, "<b>$1</b>$2 <b>then</b>\n");
-    text = text.replaceAll(/([\w\[\]\(\)_]+)\s?([\+-/\*])=\s?("?[\w\[\]\(\)]+"?)/g, "$1 = $1 $2 $3");
-    text = text.replaceAll(/\s*!=\s*/g," ≠ ");
-    text = text.replaceAll(/\s*<=\s*/g," ≤ ");
-    text = text.replaceAll(/\s*>=\s*/g," ≥ ");
+    text = text.replaceAll(/(for each|while)(.*):\ */g, "<b>$1</b>$2 <b>do</b>");
+    text = text.replaceAll(/(if.*) in /g, "$1 is in ");
+    text = text.replaceAll(/(if.*) not is /g, "$1 is not ");
+    text = text.replaceAll(/(if|otherwise if|else)(.*): */g, "<b>$1</b>$2 <b>then</b>");
+    text = text.replaceAll(/([\w\[\]\(\)_]+) ?([\+-/\*])= ?("?[\w\[\]\(\)]+"?)/g, "$1 = $1 $2 $3");
+    text = text.replaceAll(/ *!= */g," ≠ ");
+    text = text.replaceAll(/ *<= */g," ≤ ");
+    text = text.replaceAll(/ *>= */g," ≥ ");
     text = text.replaceAll("=","←");
     text = text.replaceAll("←←","=");
     text = text.replaceAll(/([<>])\u2190/g,"$1=");
-    const appendRegex = /(\w+)\.append\((.+)\)\s*\n/g;
-    text = text.replaceAll(appendRegex, "append $2 to the end of $1\n");
-    text = text.replaceAll(/\s*\*\*\s*2/g,"²");
-    text = text.replaceAll(/len\(\s*(\w+)\s*\)/g, "the length of $1");
-    text = text.replaceAll(/(\w+)\s*\*\*\s*0\.5/g,"the square root of $1");
-    text = text.replaceAll(/\s*\*\*\s*/g," to the power of ");
-    text = text.replaceAll(/sorted\(\s*(\w+)\s*\)/g,"$1 sorted in ascending alhpanumeric order");
-    text = text.replaceAll(/float\(\s*["'](-?)inf['"]\)/g, "$1∞");
+    const appendRegex = /(\w+)\.append\((.+)\) */g;
+    text = text.replaceAll(appendRegex, "append $2 to the end of $1");
+    text = text.replaceAll(/ *\*\* *2/g,"²");
+    text = text.replaceAll(/len\( *(\w+) *\)/g, "the length of $1");
+    text = text.replaceAll(/(\w+) *\*\* *0\.5/g,"the square root of $1");
+    text = text.replaceAll(/ *\*\* */g," to the power of ");
+    text = text.replaceAll(/sorted\( *(\w+) *\)/g,"$1 sorted in ascending alhpanumeric order");
+    text = text.replaceAll(/float\( *["'](-?)inf['"]\)/g, "$1∞");
     text = text.replaceAll("None", "<i>null</i>");
     text = text.replaceAll(/math.sqrt\((.+)\)/g,"the square root of ($1)");
     text = text.replaceAll(/tuple\((.+)\)/g,"$1");
 
 
 
-    const subsequenceRegex = /(\w+)\[\s*([^:\]]*)\s*:\s*([^:\]]*)\s*\]/g;
+    const subsequenceRegex = /(\w+)\[ *([^:\]]*) *: *([^:\]]*) *\]/g;
     text = text.replaceAll(subsequenceRegex, (match, thing1, thing2, thing3) => {
       const start = thing2.trim()? `${thing1}<sub>`+thing2.trim()+`</sub>` : `the start of ${thing1}`;
       const end = thing3.trim()? `${thing1}<sub>`+thing3.trim()+`</sub>` : `the end of ${thing1}`;
@@ -112,9 +112,9 @@ function generate_recipe_clicked() {
 
 
     text = text.replaceAll(/random.random\(\)/g, "a random real number ≥ 0 and < 1, chosen with a uniform distribution");
-    text = text.replaceAll(/random.randint\(\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/g, "a random integer ≥ $1 and ≤ $2 chosen with uniform distribution");
+    text = text.replaceAll(/random.randint\( *([0-9]+) *, *([0-9]+) *\)/g, "a random integer ≥ $1 and ≤ $2 chosen with uniform distribution");
     text = text.replaceAll(
-      /range\(\s*(.+)\s*,\s*(.+)\s*\)/g,
+      /range\( *(.+) *, *(.+) *\)/g,
       (match, a, b) => {
         let result = ``
         if(isNaN(a)){
@@ -124,8 +124,8 @@ function generate_recipe_clicked() {
           result = `the sequence ${a},${a + 1},...,`;
         }
         if(isNaN(b)){
-          if(/\+\s?1\s?$/.test(b)){
-            result += `${b.replace(/\+\s?1\s?$/,"")}`;
+          if(/\+ ?1 ?$/.test(b)){
+            result += `${b.replace(/\+ ?1 ?$/,"")}`;
           }else{
             result += `${b+"-1"}`;
           }
@@ -136,11 +136,11 @@ function generate_recipe_clicked() {
         return result;
       }
     );
-    text = text.replaceAll(/range\(\s*(.+)\s*\)/g, (match, a) => {
+    text = text.replaceAll(/range\( *(.+) *\)/g, (match, a) => {
       result = "the sequence 0,1,...,"
       if(isNaN(a)){
-        if(/\+\s?1\s?$/.test(a)){
-          result += `${a.replace(/\+\s?1\s?$/,"")}`;
+        if(/\+ ?1 ?$/.test(a)){
+          result += `${a.replace(/\+ ?1 ?$/,"")}`;
         }else{
           result += `${a+"-1"}`;
         }
@@ -151,13 +151,13 @@ function generate_recipe_clicked() {
       return result;
     }
     );
-    text = text.replaceAll(/(\s*)(\w+\s*←\s*)(\w+)\.pop\(\s*(\w+)\s*\)/g, "$1$2$3<sub>$4</sub>$1remove the element at index $4 from $3");
-    text = text.replaceAll(/(\w+)\.pop\(\s*(\w+)\s*\)/g, "remove the element at index $2 from $1");
-    text = text.replaceAll(/(\w+)\.insert\(\s*(\w+)\s*,\s*(\w)\s*\)/g, "insert $3 into $1 at index $2");
+    text = text.replaceAll(/(\s*)(\w+ *← *)(\w+)\.pop\( *(\w+) *\)/g, "$1$2$3<sub>$4</sub>$1remove the element at index $4 from $3");
+    text = text.replaceAll(/(\w+)\.pop\( *(\w+) *\)/g, "remove the element at index $2 from $1");
+    text = text.replaceAll(/(\w+)\.insert\( *(\w+) *, *(\w) *\)/g, "insert $3 into $1 at index $2");
     text = text.replaceAll(/(\w+)\.keys\(\)/g, "the keys of $1");
     text = text.replaceAll(/(\w+)\.values\(\)/g, "the values of $1");
-    text = text.replaceAll(/(\w+)\[\s?-1\s?\]/g, "the last element of $1");
-    text = text.replaceAll(/def\s+(\w+).+/g,"<b>Name:</b> $1");
+    text = text.replaceAll(/(\w+)\[ ?-1 ?\]/g, "the last element of $1");
+    text = text.replaceAll(/def +(\w+).+/g,"<b>Name:</b> $1");
     if(settings.formatMethods){
       text = text.replaceAll(/(\w+)\.(\w+\([^\)]*\))/g, "the value returned by calling $2 on the object $1");
     }else{
@@ -203,7 +203,7 @@ function generate_recipe_clicked() {
     
 
     text = text.replaceAll(/\{\s?\}/g, "an empty map");
-    text = text.replaceAll(/\{\s?(\w+)\s?:\s?(\w+)\s?\}/g, "a map with the correspondence $1 ↦ $2");
+    text = text.replaceAll(/\{ ?(\w+) ?: ?(\w+) ?\}/g, "a map with the correspondence $1 ↦ $2");
     text = text.replaceAll(/\[\s?\]/g, "an empty sequence");
 
     text = text.replaceAll(/[Ii]nput(s?):/g, "<b>Input$1:</b>");
