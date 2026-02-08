@@ -118,7 +118,21 @@ function generate_recipe_clicked() {
       (match, a, b) => {
         let result = ``
         if(isNaN(a)){
-          result = `the sequence ${a},${a + "+1"},...,`;
+          if(/[\+-] ?(\d+) ?$/.test(a)){
+            match = a.match(/([\+-]) ?(\d+) ?$/);
+            const number = parseInt(match[1] + match[2]);
+            let nextNumber = number.toString();
+            if(number <= -2){
+              nextNumber = number+1;
+            }if(number == -1){
+              nextNumber = "";
+            }if(number >= 1){
+              nextNumber = "+" + (number+1);
+            }
+            result += `the sequence ${a},${a.replace(/[\+-] ?\d+ ?$/, nextNumber)},...,`;
+          }else{
+            result = `the sequence ${a},${a + "+1"},...,`;
+          } 
         }else{
           a = parseInt(a);
           result = `the sequence ${a},${a + 1},...,`;
