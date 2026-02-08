@@ -23,7 +23,7 @@ fetch("/api/users", {
   method: "POST"
 });
 
-// Save text to localStorage before unloading the page
+// Save text to localStorage bonefore unloading the page
 window.addEventListener("beforeunload", () => {
   setStorage("code-text", textInput.value);
 });
@@ -300,15 +300,22 @@ function generate_recipe_clicked() {
 }
 
 function unindent_clicked() {
-    let text = textOutput.innerHTML;
-    // a little bit of jank code to fix consecutive line breaks
-    text = "\n"+text;
-    text = text.replaceAll("\n\n","\n:\n");
-    text = text.replaceAll(/\n\s{4}/g,"\n"); // this is the one that actually un-indents
-    text = text.replaceAll("\n:\n","\n\n");
-    console.log(text);
-    text = text.slice(1);
-    textOutput.innerHTML = text;
+  fetch("/api/counter", { 
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "unindent" }),
+    keepalive: true
+  });
+  
+  let text = textOutput.innerHTML;
+  // a little bit of jank code to fix consecutive line breaks
+  text = "\n"+text;
+  text = text.replaceAll("\n\n","\n:\n");
+  text = text.replaceAll(/\n\s{4}/g,"\n"); // this is the one that actually un-indents
+  text = text.replaceAll("\n:\n","\n\n");
+  console.log(text);
+  text = text.slice(1);
+  textOutput.innerHTML = text;
 }
 
 function about_clicked(){
