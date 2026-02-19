@@ -200,17 +200,17 @@ function generate_recipe_clicked() {
     // set to array
     let variableArray = [...variableBank];
     let variableString = variableArray.join('|');
-    const italicize = new RegExp(`([^\\w])(${variableString})([^\\w>])`,'g');
+    const italicize = new RegExp(`([^\\w-])(${variableString})([^\\w>])`,'g');
 
 
     
     if(variableString != ""){
       //ensure that there is a 2 character gap between variables so regex can capture all variables
-      text = text.replaceAll(",",", "); 
+      text = text.replaceAll(/([,-])/g,"$1 "); 
       //italicize variables
       text = text.replaceAll(italicize, '$1<i>$2</i>$3');
       //restore commas
-      text = text.replaceAll(", ",",");
+      text = text.replaceAll(/([,-]) /g,"$1");
     }
 
     text = text.replaceAll("return ","<b>return</b> ");
