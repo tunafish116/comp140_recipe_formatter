@@ -98,6 +98,8 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/sorted\( *(\w+) *\)/g,"$1 sorted in ascending alhpanumeric order");
     text = text.replaceAll(/float\( *["'](-?)inf['"]\)/g, "$1∞");
     text = text.replaceAll("None", "<i>null</i>");
+    text = text.replaceAll("True", "true");
+    text = text.replaceAll("False", "false");
     text = text.replaceAll(/math.sqrt\((.+)\)/g,"the square root of ($1)");
     text = text.replaceAll(/tuple\((.+)\)/g,"$1");
 
@@ -294,6 +296,9 @@ function generate_recipe_clicked() {
 
     if(text.includes("</mark>")){
       document.getElementById("warning-text").hidden = false;
+      if(text.includes("floats")){
+        document.getElementById("float-warning-text").hidden = false;
+      }
     }else{
         document.getElementById("warning-text").hidden = true;
     }
@@ -334,6 +339,15 @@ function hide_warnings_clicked(){
   console.log(text);
   textOutput.innerHTML = text;
   document.getElementById("warning-text").hidden = true;
+  document.getElementById("float-warning-text").hidden = true;
+}
+
+function replace_floats_clicked(){
+  let text = textOutput.innerHTML;
+  text = text.replaceAll(/>float(s)?</g, ">real number$1<");
+  console.log(text);
+  textOutput.innerHTML = text;
+  document.getElementById("float-warning-text").hidden = true;
 }
 
 function tips_clicked(){

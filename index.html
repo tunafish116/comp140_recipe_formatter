@@ -74,6 +74,11 @@
                         Format warnings are highlighted in yellow. Hover over the warnings to learn more.
                         <a style="color: blue; text-decoration-color: blue;" onclick="hide_warnings_clicked()"><u>Hide Warnings.</u></a>
                     </p>
+                    <p style="margin-top: 0px; margin-bottom: 0px;" id="float-warning-text" hidden>
+                        Replace "float" with "real number? (this is not always correct, e.g. distance is a <i>positive</i> real number)"
+                        <a style="color: blue; text-decoration-color: blue;" onclick="replace_floats_clicked()"><u>Replace floats.</u></a>
+                    </p>
+
                     <div>
                         <pre id="text-output" rows="12" cols="100"></pre>
                     </div>
