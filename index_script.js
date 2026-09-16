@@ -98,8 +98,6 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/sorted\( *(\w+) *\)/g,"$1 sorted in ascending alhpanumeric order");
     text = text.replaceAll(/float\( *["'](-?)inf['"]\)/g, "$1∞");
     text = text.replaceAll("None", "<i>null</i>");
-    text = text.replaceAll("True", "true");
-    text = text.replaceAll("False", "false");
     text = text.replaceAll(/math.sqrt\((.+)\)/g,"the square root of ($1)");
     text = text.replaceAll(/tuple\((.+)\)/g,"$1");
 
