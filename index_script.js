@@ -28,7 +28,7 @@ window.addEventListener("beforeunload", () => {
   setStorage("code-text", textInput.value);
 });
 
-
+//TODO handle consecutive comments
 function generate_recipe_clicked() {
     let text = textInput.value;
     addDBEntry(text);
@@ -244,7 +244,7 @@ function generate_recipe_clicked() {
     
     // **** OTHER CODE FORMAT WARNINGS ****
     text = text.replaceAll(/((?:\[.+\])+)/g,
-      "<mark title=\"Nested indexing is not allowed in recipes.\">$1</mark>"
+      "<mark title=\"Nested indexing is not supported in recipe syntax. (see tips)\">$1</mark>"
     );
     text = text.replaceAll(/\b(floats?)\b/g,
       "<mark title=\"Floats do not exist in recipe syntax.\">$1</mark>"
@@ -259,7 +259,10 @@ function generate_recipe_clicked() {
       "<mark title=\"Are you sure you want this?\">$1</mark>\("
     );
     text = text.replaceAll(/ (tuple) /g,
-      " <mark title=\"Replace with ordered pair/triple?\">$1</mark> "
+      " <mark title=\"Replace with ordered pair/triple or sequence?\">$1</mark> "
+    );
+    text = text.replaceAll(/\b(dictionary|dict)\b/g,
+      "<mark title=\"Dictionaries do not exist in recipe syntax.\">$1</mark>"
     );
 
 
