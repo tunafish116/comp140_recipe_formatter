@@ -29,7 +29,6 @@ window.addEventListener("beforeunload", () => {
 });
 
 
-//TODO implement enumerate() conversion
 function generate_recipe_clicked() {
     let text = textInput.value;
     addDBEntry(text);
@@ -247,11 +246,20 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/((?:\[.+\])+)/g,
       "<mark title=\"Nested indexing is not allowed in recipes.\">$1</mark>"
     );
-    text = text.replaceAll(/ (floats?) /g,
-      " <mark title=\"Floats do not exist in recipe syntax.\">$1</mark> "
+    text = text.replaceAll(/\b(floats?)\b/g,
+      "<mark title=\"Floats do not exist in recipe syntax.\">$1</mark>"
     );
     text = text.replaceAll(/(<i>.{1,2}<\/i>)/g,
-      " <mark title=\"Variable names must be at least 3 characters long.\">$1</mark> "
+      "<mark title=\"Variable names must be at least 3 characters long.\">$1</mark>"
+    );
+    text = text.replaceAll(/\b(list)\b/g,
+      "<mark title=\"Lists do not exist in recipe syntax.\">$1</mark>"
+    );
+    text = text.replaceAll(/\b(tuple)\(/g,
+      "<mark title=\"Are you sure you want this?\">$1</mark>\("
+    );
+    text = text.replaceAll(/ (tuple) /g,
+      " <mark title=\"Replace with ordered pair/triple?\">$1</mark> "
     );
 
 
@@ -300,8 +308,10 @@ function generate_recipe_clicked() {
 
     if(text.includes("</mark>")){
       document.getElementById("warning-text").hidden = false;
-      if(text.includes("floats")){
+      if(/\bfloats?\b/g.test(text)){
         document.getElementById("float-warning-text").hidden = false;
+      }else{
+        document.getElementById("float-warning-text").hidden = true;
       }
     }else{
         document.getElementById("warning-text").hidden = true;
@@ -348,7 +358,7 @@ function hide_warnings_clicked(){
 
 function replace_floats_clicked(){
   let text = textOutput.innerHTML;
-  text = text.replaceAll(/>float(s)?</g, ">real number$1<");
+  text = text.replaceAll(/<mark[^>]+>float(s)?<\/mark>/g, "real number$1");
   console.log(text);
   textOutput.innerHTML = text;
   document.getElementById("float-warning-text").hidden = true;
