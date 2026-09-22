@@ -29,7 +29,7 @@ window.addEventListener("beforeunload", () => {
 });
 
 
-
+//TODO implement enumerate() conversion
 function generate_recipe_clicked() {
     let text = textInput.value;
     addDBEntry(text);
@@ -57,6 +57,8 @@ function generate_recipe_clicked() {
         variableBank.add(param);
       });
     }
+
+    
 
     // special case for <sub> tag
     if(variableBank.has("sub")){
@@ -90,7 +92,7 @@ function generate_recipe_clicked() {
     text = text.replaceAll("←←","=");
     text = text.replaceAll(/([<>])\u2190/g,"$1=");
     const appendRegex = /(\w+)\.append\((.+)\) */g;
-    text = text.replaceAll(appendRegex, "append $2 to the end of $1");
+    text = text.replaceAll(appendRegex, "append $2 at the end of $1");
     text = text.replaceAll(/ *\*\* *2/g,"²");
     text = text.replaceAll(/len\( *(\w+) *\)/g, "the length of $1");
     text = text.replaceAll(/(\w+) *\*\* *0\.5/g,"the square root of $1");
@@ -113,6 +115,10 @@ function generate_recipe_clicked() {
 
     text = text.replaceAll(/random.random\(\)/g, "a random real number ≥ 0 and < 1, chosen with a uniform distribution");
     text = text.replaceAll(/random.randint\( *([0-9]+) *, *([0-9]+) *\)/g, "a random integer ≥ $1 and ≤ $2 chosen with uniform distribution");
+    text = text.replaceAll(/(\w+), ?(\w+) in enumerate\( *(\w+) *\)/g, (match, a, b, c) => {
+      variableBank.add(b);
+      return `${b} and corresponding index of ${b}, ${a}, in ${c}`;
+    });
     text = text.replaceAll(
       /range\( *(.+) *, *(.+) *\)/g,
       (match, a, b) => {
