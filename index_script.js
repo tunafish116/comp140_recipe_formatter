@@ -101,9 +101,11 @@ function generate_recipe_clicked() {
     text = text.replaceAll("None", "<i>null</i>");
     text = text.replaceAll(/math.sqrt\((.+)\)/g,"the square root of ($1)");
     text = text.replaceAll(/tuple\((.+)\)/g,"$1");
+    text = text.replaceAll(/(\n {4,})break( ?\n)/g, "$1exit the current loop$2")
 
 
-
+    text = text.replaceAll(/(\w+)\[:\]/g, "a copy of $1");
+    text = text.replaceAll(/list\((\w+)\)/g, "a copy of $1");
     const subsequenceRegex = /(\w+)\[ *([^:\]]*) *: *([^:\]]*) *\]/g;
     text = text.replaceAll(subsequenceRegex, (match, thing1, thing2, thing3) => {
       const start = thing2.trim()? `${thing1}<sub>`+thing2.trim()+`</sub>` : `the start of ${thing1}`;
@@ -113,6 +115,10 @@ function generate_recipe_clicked() {
 
 
     text = text.replaceAll(/random.random\(\)/g, "a random real number ≥ 0 and < 1, chosen with a uniform distribution");
+    text = text.replaceAll(/random.uniform\( *([0-9]+) *, *([0-9]+) *\)/g, "a random real number ≥ $1 and < $2, chosen with a uniform distribution");
+    text = text.replaceAll(/random.randrange\( *([0-9]+) *, *([0-9]+) *\)/g, (match, a, b) => {
+      return "a random integer ≥ "+a+" and ≤ "+(parseInt(b)-1)+" chosen with uniform distribution";
+    });
     text = text.replaceAll(/random.randint\( *([0-9]+) *, *([0-9]+) *\)/g, "a random integer ≥ $1 and ≤ $2 chosen with uniform distribution");
     text = text.replaceAll(/(\w+), ?(\w+) in enumerate\( *(\w+) *\)/g, (match, a, b, c) => {
       variableBank.add(b);
@@ -261,8 +267,11 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/ (tuple) /g,
       " <mark title=\"Replace with ordered pair/triple or sequence?\">$1</mark> "
     );
-    text = text.replaceAll(/\b(dictionary|dict)\b/g,
+    text = text.replaceAll(/\b(dictionary|dict)\b^</g,
       "<mark title=\"Dictionaries do not exist in recipe syntax.\">$1</mark>"
+    );
+    text = text.replaceAll(/\b(defaultdict)\b/g,
+      "<mark title=\"Rewrite as a regular dictionary.\">$1</mark>"
     );
 
 
