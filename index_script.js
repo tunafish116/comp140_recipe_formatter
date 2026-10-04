@@ -205,6 +205,14 @@ function generate_recipe_clicked() {
     if(mapBank != ""){
       text = text.replaceAll(mapCorrespondence, 'add a new correspondence $2 ↦ $3 to the map $1');
     }
+
+    // if iterating over a map, change to iterating over the keys of the map
+    // if checking membership in a map, change to checking membership in the keys of the map
+    if(mapBank != ""){
+      const inMap = new RegExp(`in (${mapBank})`,'g');
+      text = text.replaceAll(inMap, 'in the keys of $1');
+    }
+
     //array index to subscript
     text = text.replaceAll(/(\w+)\[([^\]\[]+)\](?![\[\]])/g, "$1<sub>$2</sub>");
 
