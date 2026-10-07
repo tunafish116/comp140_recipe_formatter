@@ -7,6 +7,11 @@ let darkToggle = document.getElementById("dark-toggle");
 let commentToggle = document.getElementById("comment-toggle");
 let methodToggle = document.getElementById("method-toggle");
 
+
+// Warning flags
+let floatWarning = false;
+let listWarning = false;
+
 // Initialize settings from localStorage
 window.onload = () =>
 applySettings();
@@ -28,7 +33,6 @@ window.addEventListener("beforeunload", () => {
   setStorage("code-text", textInput.value);
 });
 
-//TODO handle consecutive comments
 function generate_recipe_clicked() {
     let text = textInput.value;
     addDBEntry(text);
@@ -191,7 +195,7 @@ function generate_recipe_clicked() {
       );
     }
     if(settings.removeComments){
-      text = text.replaceAll(/\n?\s*#.*\n/g, "\n");
+      text = text.replaceAll(/\n?(?:\s*#.*\n)+/g, "\n");
     }else{
       text = text.replaceAll(/(#.*)\n/g,
         "<mark title=\"Remove all comments from final recipe.\">$1</mark>\n"
@@ -215,6 +219,7 @@ function generate_recipe_clicked() {
 
     //array index to subscript
     text = text.replaceAll(/(\w+)\[([^\]\[]+)\](?![\[\]])/g, "$1<sub>$2</sub>");
+    text = text.replaceAll(/(\w+)\[([^\]\[]+)\]\[([^\]\[]+)\](?![\[\]])/g, "($1<sub>$2</sub>)<sub>$3</sub>");
 
     // set to array
     let variableArray = [...variableBank];
@@ -260,19 +265,23 @@ function generate_recipe_clicked() {
     text = text.replaceAll(/((?:\[.+\])+)/g,
       "<mark title=\"Nested indexing is not supported in recipe syntax. (see tips)\">$1</mark>"
     );
-    text = text.replaceAll(/\b(floats?)\b/g,
-      "<mark title=\"Floats do not exist in recipe syntax.\">$1</mark>"
+    text = text.replaceAll(/\bfloats?\b/g, (match) => {
+      floatWarning = true;
+      return "<mark title=\"Floats do not exist in recipe syntax.\">"+match+"</mark>"
+    }
     );
     text = text.replaceAll(/(<i>.{1,2}<\/i>)/g,
       "<mark title=\"Variable names must be at least 3 characters long.\">$1</mark>"
     );
-    text = text.replaceAll(/\b(list)\b/g,
-      "<mark title=\"Lists do not exist in recipe syntax.\">$1</mark>"
+    text = text.replaceAll(/\blists?\b/g, (match) => {
+      listWarning = true;
+      return "<mark title=\"Lists do not exist in recipe syntax.\">"+match+"</mark>"
+    }
     );
     text = text.replaceAll(/\b(tuple)\(/g,
       "<mark title=\"Are you sure you want this?\">$1</mark>\("
     );
-    text = text.replaceAll(/ (tuple) /g,
+    text = text.replaceAll(/ (tuples?) /g,
       " <mark title=\"Replace with ordered pair/triple or sequence?\">$1</mark> "
     );
     text = text.replaceAll(/\b(dictionary|dict)\b^</g,
@@ -328,11 +337,8 @@ function generate_recipe_clicked() {
 
     if(text.includes("</mark>")){
       document.getElementById("warning-text").hidden = false;
-      if(/\bfloats?\b/g.test(text)){
-        document.getElementById("float-warning-text").hidden = false;
-      }else{
-        document.getElementById("float-warning-text").hidden = true;
-      }
+      document.getElementById("float-warning-text").hidden = !floatWarning;
+      document.getElementById("list-warning-text").hidden = !listWarning;
     }else{
         document.getElementById("warning-text").hidden = true;
     }
@@ -374,6 +380,7 @@ function hide_warnings_clicked(){
   textOutput.innerHTML = text;
   document.getElementById("warning-text").hidden = true;
   document.getElementById("float-warning-text").hidden = true;
+  document.getElementById("list-warning-text").hidden = true;
 }
 
 function replace_floats_clicked(){
@@ -382,6 +389,14 @@ function replace_floats_clicked(){
   console.log(text);
   textOutput.innerHTML = text;
   document.getElementById("float-warning-text").hidden = true;
+}
+
+function replace_lists_clicked(){
+  let text = textOutput.innerHTML;
+  text = text.replaceAll(/<mark[^>]+>list(s)?<\/mark>/g, "sequence$1");
+  console.log(text);
+  textOutput.innerHTML = text;
+  document.getElementById("list-warning-text").hidden = true;
 }
 
 function tips_clicked(){
