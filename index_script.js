@@ -105,7 +105,6 @@ function generate_recipe_clicked() {
     text = text.replaceAll("None", "<i>null</i>");
     text = text.replaceAll(/math.sqrt\((.+)\)/g,"the square root of ($1)");
     text = text.replaceAll(/tuple\((.+)\)/g,"$1");
-    text = text.replaceAll(/(\n {4,})break( ?\n)/g, "$1exit the current loop$2")
 
 
     text = text.replaceAll(/(\w+)\[:\]/g, "a copy of $1");
@@ -289,6 +288,9 @@ function generate_recipe_clicked() {
     );
     text = text.replaceAll(/\b(defaultdict)\b/g,
       "<mark title=\"Rewrite as a regular dictionary.\">$1</mark>"
+    );
+    text = text.replaceAll(/(\n {4,})break( *\n)/g,
+      "$1<mark title=\"Breaking out of loops is not supported in recipe syntax.\">break</mark>$2"
     );
 
 
