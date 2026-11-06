@@ -80,3 +80,14 @@ function confetti(){
   }
   requestAnimationFrame(frame);
 }
+
+// Tips button on modern.html goes to the modern tips page
+function modern_tips_clicked(){
+  fetch("/api/counter", { 
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "tips" }),
+    keepalive: true
+  });
+  clickLink("modern-tips.html");
+}

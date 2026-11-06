@@ -462,3 +462,55 @@ code {
         align-items: flex-start;
     }
 }
+
+/* ---------- Tips page (modern-tips.html) ---------- */
+
+.tips-content {
+    gap: 0;
+    padding: 8px 28px;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+.tip {
+    padding: 20px 0;
+}
+
+.tip + .tip {
+    border-top: 1px solid var(--border);
+}
+
+.tip p {
+    margin: 0 0 10px;
+}
+
+.tip ul {
+    margin: 0 0 12px;
+    padding-left: 24px;
+}
+
+.tip .code {
+    margin: 0 0 12px;
+    padding: 10px 14px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    white-space: pre;
+}
+
+.example {
+    margin: 0 0 12px 16px;
+    padding-left: 14px;
+    border-left: 3px solid var(--border);
+}
+
+.example .label {
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}

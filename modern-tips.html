@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>:3</title>
+        <link rel="stylesheet" href="modern.css">
+        <link rel="stylesheet" href="modern-dark.css" id="dark-stylesheet" disabled>
+        <link rel="icon" type="image/x-icon" href="icon.png">
+        <script src="global_script.js"></script>
+        <script src="modern_tips_script.js"></script>
+    </head>
+    <body>
+        <header class="topbar">
+            <div class="brand">
+                <img src="icon.png" alt="" class="brand-icon">
+                <h1>Tips for using this tool:</h1>
+            </div>
+            <nav class="nav">
+                <button class="btn btn-secondary" onclick="back_clicked()">Back</button>
+            </nav>
+        </header>
+
+        <main class="workspace">
+            <section class="panel tips-content">
+                <section class="tip">
+                    <p><b>1.</b> Don't access nested elements directly. This because you can't do double subscripts in recipes.</p>
+                    <p>Examples:</p>
+                    <div class="example">
+                        <p class="label">instead of:</p>
+                        <pre class="code">grid[1][2] = 3</pre>
+                        <p class="label">use:</p>
+                        <pre class="code">grid[1] = row
+row[2] = 3</pre>
+                    </div>
+                    <div class="example">
+                        <p class="label">instead of:</p>
+                        <pre class="code">age[people[1]] = 2</pre>
+                        <p class="label">use:</p>
+                        <pre class="code">person = people[1]
+age[person] = 2</pre>
+                    </div>
+                    <p>this applies to nested dictionaries as well.</p>
+                </section>
+
+                <section class="tip">
+                    <p><b>2.</b> Methods that perform simple actions, such as getters, setters, and calculators are often more concisely described in plain words.</p>
+                    <p>For example, if this is your code:</p>
+                    <pre class="code">area = shape.area()</pre>
+                    <p>You should rewrite your recipe as:</p>
+                    <pre class="code"><i>area</i> ← the area of <i>shape</i></pre>
+                    <p>There is an option in settings to automatically transform all methods calls with the format:</p>
+                    <pre class="code">object.method(...)</pre>
+                    <p>Into:</p>
+                    <pre class="code">the value returned by calling method(...) on the object <i>object</i></pre>
+                </section>
+
+                <section class="tip">
+                    <p><b>3.</b> Please still check each line for mistakes. If you put that much trust in a random person's code to do your assignment, I'm very flattered, thank you, but please don't. Some more exotic aspects of python have not been implemented into the recipe formatter yet.</p>
+                    <p>Examples of recognized python features:</p>
+                    <ul>
+                        <li>Lists</li>
+                        <li>Dictionaries</li>
+                        <li>For and while loops</li>
+                        <li>Range</li>
+                        <li>Random</li>
+                    </ul>
+                    <p>Examples of unrecognized python features:</p>
+                    <ul>
+                        <li>Classes</li>
+                        <li>List comprehensions</li>
+                        <li>Default dictionaries</li>
+                        <li>Sets</li>
+                        <li>Lambda functions</li>
+                        <li>Many many more</li>
+                    </ul>
+                </section>
+
+                <section class="tip">
+                    <p><b>4.</b> Why can't it write my inputs and outputs WAAAAAHH</p>
+                    <p>The point of this tool is to show how stupid certain aspects of recipes are. The fact a couple lines of replaceAll using regex can get you to 80% of a full recipe is proof that writing recipe steps is redundant work, and is basically porting your python program to another language. Inputs and outputs, however, actually require brainpower to write, and to automate that task would require something like ChatGPT. This aspect of recipies can at least be justified in the name of learning. This is not a tool for avoiding learning. Sorry you'll still have to write your inputs and outputs yourself :3</p>
+                </section>
+
+                <section class="tip">
+                    <p><b>5.</b> Other stuff that may be useful</p>
+                    <ul>
+                        <li>To italicize "<code>var_name</code>", add "<code>var_name=</code>" somewhere in your code text</li>
+                        <li>To recognize "<code>var_name</code>" as a dictionary, add "<code>var_name={}</code>" somewhere in your code text</li>
+                        <li>To escape the stress of Comp140, click on the "about" button</li>
+                    </ul>
+                </section>
+            </section>
+        </main>
+    </body>
+</html>
