@@ -11,14 +11,39 @@ const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme
 
 
 
-function addDBEntry(text){
-  fetch("/api/python_code", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ content: text})
-})
-.then(res => res.json())
-.then(data => console.log(data));
+async function addDBEntry(text) {
+  const response = await fetch("/api/python_code", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content: text })
+  });
+  const data = await response.json();
+
+  if (!response.ok || data.error || data.success === false) {
+    throw new Error(data.error || `Request failed with status ${response.status}`);
+  }
+
+  console.log(data);
+  await submit();
+}
+
+async function submit() {
+    const userId = getStorage("user_id");
+    const response = await fetch("/api/submissions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({user_id: userId})
+    });
+
+    if (!response.ok) {
+        throw new Error("Submission failed");
+    }
+
+    const result = await response.json();
+
+    setStorage("user_id", result.user_id);
 }
 
 
