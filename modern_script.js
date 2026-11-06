@@ -1,13 +1,19 @@
-if(getStorage("is-ugly", false)){
-  setStorage("is-ugly", false);
-  if(window.confirm("There. Better now?")) {
-    confetti();
-  }else{
-    const text = window.prompt("Feel free to leave your worst insults here. I will read them and cry.");
-    if(text) {
-      addDBEntry("feedback: " + text);
+document.addEventListener('DOMContentLoaded', () => {
+    showDialogue();
+});
+
+function showDialogue() {
+  if(getStorage("is-ugly", false)){
+    setStorage("is-ugly", false);
+    if(window.confirm("There. Better now?")) {
+      confetti();
+    }else{
+      const text = window.prompt("Feel free to leave your worst insults here. I will read them and cry.");
+      if(text) {
+        addDBEntry("feedback: " + text);
+      }
+      clickLink("index.html");
     }
-    clickLink("index.html");
   }
 }
 
