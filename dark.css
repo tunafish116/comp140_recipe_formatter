@@ -22,6 +22,8 @@ textarea {
 
 button {
     background-color: rgb(47, 106, 154);
+    /* Set explicitly: some browsers (e.g. iOS Safari) default button text to blue */
+    color: black;
 }
 
 #settings-container {

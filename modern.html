@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Recipe Formatter</title>
+        <link rel="stylesheet" href="modern.css">
+        <!-- index_script.js toggles this stylesheet's `disabled` flag for dark mode -->
+        <link rel="stylesheet" href="modern-dark.css" id="dark-stylesheet" disabled>
+        <link rel="icon" type="image/x-icon" href="icon.png">
+</dialog>
+    </head>
+    <body>
+        <!-- Settings modal. index_script.js shows/hides this via style.display -->
+        <div id="settings-container" onclick="if (event.target === this) cancelSettings()">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+                <h2 id="settings-title">Settings</h2>
+
+                <label class="setting-row" for="dark-toggle">
+                    <span class="setting-text">
+                        <span class="setting-name">Dark mode</span>
+                    </span>
+                    <span class="switch">
+                        <input type="checkbox" id="dark-toggle">
+                        <span class="slider"></span>
+                    </span>
+                </label>
+
+                <label class="setting-row" for="comment-toggle">
+                    <span class="setting-text">
+                        <span class="setting-name">Remove comments</span>
+                        <span class="setting-desc">Strip <code>#</code> comments from the output</span>
+                    </span>
+                    <span class="switch">
+                        <input type="checkbox" id="comment-toggle">
+                        <span class="slider"></span>
+                    </span>
+                </label>
+
+                <label class="setting-row" for="method-toggle">
+                    <span class="setting-text">
+                        <span class="setting-name">Format method calls</span>
+                        <span class="setting-desc">Rewrite <code>obj.f(x)</code> in recipe syntax</span>
+                    </span>
+                    <span class="switch">
+                        <input type="checkbox" id="method-toggle">
+                        <span class="slider"></span>
+                    </span>
+                </label>
+
+                <div class="modal-actions">
+                    <button class="btn btn-ghost" onclick="restoreDefault()">Restore default</button>
+                    <span class="spacer"></span>
+                    <button class="btn btn-secondary" onclick="cancelSettings()">Cancel</button>
+                    <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <header class="topbar">
+            <div class="brand">
+                <img src="icon.png" alt="" class="brand-icon">
+                <div>
+                    <h1>Comp 140 Recipe Formatter</h1>
+                    <span class="version">Version 1.9</span>
+                </div>
+            </div>
+            <nav class="nav">
+                <button class="btn btn-ghost" onclick="about_clicked()">About</button>
+                <button class="btn btn-ghost" onclick="tips_clicked()">Tips</button>
+                <button class="btn btn-secondary" onclick="settings_clicked()">Settings</button>
+            </nav>
+        </header>
+
+        <main class="workspace">
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Python code</h2>
+                    <span class="panel-hint">Paste your Python code here</span>
+                </div>
+                <textarea id="text-input" spellcheck="false" placeholder="def my_function(data):&#10;    ..."></textarea>
+                <div class="panel-actions">
+                    <button class="btn btn-primary" onclick="generate_recipe_clicked()">Generate Recipe</button>
+                    <button class="btn btn-secondary" onclick="unindent_clicked()">Un-indent</button>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Recipe</h2>
+                </div>
+
+                <div class="notices">
+                    <p class="notice" id="warning-text" hidden>
+                        <span>Format warnings are highlighted in yellow. Hover over the warnings to learn more.</span>
+                        <a class="notice-action" onclick="hide_warnings_clicked()">Hide warnings</a>
+                    </p>
+                    <p class="notice" id="float-warning-text" hidden>
+                        <span>Replace "float" with "real number"? (not always correct, e.g. distance is a <i>positive or 0</i> real number)</span>
+                        <a class="notice-action" onclick="replace_floats_clicked()">Replace floats</a>
+                    </p>
+                    <p class="notice" id="list-warning-text" hidden>
+                        <span>Replace "list" with "sequence"? (check surrounding context)</span>
+                        <a class="notice-action" onclick="replace_lists_clicked()">Replace lists</a>
+                    </p>
+                </div>
+
+                <pre id="text-output"></pre>
+            </section>
+        </main>
+
+        <footer class="disclaimer">
+            <p><b>Disclaimer:</b> This is only a tool. It can help with initial formatting but it does not make a complete recipe by any means.</p>
+        </footer>
+
+        <script src="global_script.js"></script>
+        <script src="index_script.js"></script>
+        <script src="modern_script.js"></script>
+    </body>
+</html>

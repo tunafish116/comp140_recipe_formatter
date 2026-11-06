@@ -425,6 +425,17 @@ function settings_clicked(){
   methodToggle.checked = settings.formatMethods;
 }
 
+function modern_clicked(){
+  fetch("/api/counter", { 
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: "modern" }),
+    keepalive: true
+  });
+  setStorage("is-ugly", true);
+  clickLink("modern.html");
+}
+
 
 // Update dark mode stylesheet based on toggle
 darkToggle.addEventListener("change", () => {

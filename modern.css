@@ -1,0 +1,464 @@
+/* modern.css — styles for modern.html
+ * Colors are defined as variables so modern-dark.css only needs to override them.
+ */
+
+:root {
+    --bg: #f5f6f8;
+    --surface: #ffffff;
+    --surface-2: #f0f2f5;
+    --border: #e1e4e8;
+    --text: #1c1f24;
+    --text-muted: #646b75;
+    --primary: #2f5fd0;
+    --primary-hover: #244cad;
+    --primary-text: #ffffff;
+    --focus-ring: rgba(47, 95, 208, 0.35);
+    --notice-bg: #fff8db;
+    --notice-border: #f0d77a;
+    --notice-text: #5c4a00;
+    --mark-bg: #ffe866;
+    --mark-text: #1c1f24;
+    --backdrop: rgba(15, 18, 24, 0.45);
+    --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+    --shadow-lg: 0 20px 40px rgba(16, 24, 40, 0.18);
+
+    --radius: 12px;
+    --radius-sm: 8px;
+    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+    color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2 {
+    margin: 0;
+}
+
+code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--surface-2);
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+
+/* ---------- Top bar ---------- */
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 14px 32px;
+    background: color-mix(in srgb, var(--surface) 85%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.brand h1 {
+    font-size: 1.15rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+}
+
+.version {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.nav {
+    display: flex;
+    gap: 8px;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 550;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, transform 0.05s;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: var(--primary-text);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+.btn-secondary {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--surface-2);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+}
+
+.btn-ghost:hover {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+/* ---------- Workspace ---------- */
+
+.workspace {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    /* Narrow centered column; the empty side margins are reserved for ads */
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 28px 32px 8px;
+}
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.panel-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.panel-header h2 {
+    font-size: 0.8rem;
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.panel-hint {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.panel-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+#text-input,
+#text-output {
+    width: 100%;
+    margin: 0;
+    padding: 14px 16px;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    tab-size: 4;
+}
+
+#text-input {
+    /* Starting height only; drag the lower-right corner to resize */
+    height: 320px;
+    min-height: 120px;
+    resize: vertical;
+    white-space: pre;
+    overflow: auto;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+#text-input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+#text-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+#text-output {
+    min-height: 420px;
+    overflow: auto;
+    white-space: pre;
+}
+
+#text-output:empty::before {
+    content: "Your recipe will appear here after you click Generate Recipe.";
+    font-family: var(--font-sans);
+    color: var(--text-muted);
+    white-space: normal;
+}
+
+#text-output mark {
+    background: var(--mark-bg);
+    color: var(--mark-text);
+    border-radius: 3px;
+    padding: 0 2px;
+    cursor: help;
+}
+
+/* ---------- Warning notices ---------- */
+
+.notices {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.notices:not(:has(.notice:not([hidden]))) {
+    display: none;
+}
+
+.notice {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    color: var(--notice-text);
+    background: var(--notice-bg);
+    border: 1px solid var(--notice-border);
+    border-radius: var(--radius-sm);
+}
+
+.notice-action {
+    flex-shrink: 0;
+    font-weight: 600;
+    color: var(--primary);
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.notice-action:hover {
+    color: var(--primary-hover);
+}
+
+/* ---------- Footer ---------- */
+
+.disclaimer {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 16px 32px 40px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* ---------- Settings modal ---------- */
+
+/* index_script.js sets style.display = "block" / "none" on this element */
+#settings-container {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: var(--backdrop);
+    backdrop-filter: blur(2px);
+    overflow-y: auto;
+}
+
+.modal {
+    width: min(420px, calc(100% - 32px));
+    margin: 14vh auto 0;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    animation: modal-in 0.18s ease-out;
+}
+
+@keyframes modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.modal h2 {
+    font-size: 1.1rem;
+    font-weight: 650;
+    margin-bottom: 12px;
+}
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+}
+
+.setting-row:last-of-type {
+    border-bottom: none;
+}
+
+.setting-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.setting-name {
+    font-weight: 550;
+}
+
+.setting-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.modal-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.modal-actions .spacer {
+    flex: 1;
+}
+
+/* ---------- Toggle switch ---------- */
+
+.switch {
+    position: relative;
+    flex-shrink: 0;
+    width: 42px;
+    height: 24px;
+}
+
+.switch input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    inset: 0;
+    background: var(--border);
+    border-radius: 999px;
+    transition: background-color 0.2s;
+}
+
+.slider::before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s;
+}
+
+.switch input:checked + .slider {
+    background: var(--primary);
+}
+
+.switch input:checked + .slider::before {
+    transform: translateX(18px);
+}
+
+.switch input:focus-visible + .slider {
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 640px) {
+    .topbar,
+    .workspace,
+    .disclaimer {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .notice {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
