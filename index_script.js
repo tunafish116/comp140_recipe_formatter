@@ -374,7 +374,7 @@ function about_clicked(){
     body: JSON.stringify({ name: "about" }),
     keepalive: true
   });
-  clickLink("about.html");
+  clickLink("/about.html");
 }
 
 function hide_warnings_clicked(){
@@ -410,7 +410,7 @@ function tips_clicked(){
     body: JSON.stringify({ name: "tips" }),
     keepalive: true
   });
-  clickLink("tips.html");
+  clickLink("/tips.html");
 }
 
 function settings_clicked(){
@@ -425,6 +425,7 @@ function settings_clicked(){
   methodToggle.checked = settings.formatMethods;
 }
 
+
 function modern_clicked(){
   fetch("/api/counter", { 
     method: "POST",
@@ -433,7 +434,7 @@ function modern_clicked(){
     keepalive: true
   });
   setStorage("is-ugly", true);
-  clickLink("modern.html");
+  clickLink("/modern/modern.html");
 }
 
 

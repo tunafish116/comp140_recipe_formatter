@@ -12,7 +12,7 @@ function showDialogue() {
       if(text) {
         addDBEntry("feedback: " + text);
       }
-      clickLink("index.html");
+      clickLink("../index.html");
     }
   }
 }
